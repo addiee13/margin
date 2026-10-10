@@ -100,3 +100,17 @@ The product manager reviews the designer's specification, the implementer's real
 **Findings sent to implementer:** sharing a reader section currently drops the section parameter; preserve it in copied reader URLs. The fallback share dialog requires Escape dismissal, focus containment/return and a meaningful selectable copy fallback. Standalone source URLs must include a Library return in generated distribution chrome. The full-height iframe approach must be verified visually to exclude nested scrolling and clipping.
 
 **Status:** awaiting styles and local render. These findings are implementation observations, not a release approval.
+
+### Rendered implementation review
+
+**Direct PM observation:** local pruning reader displayed coherent warm-paper chrome, preserved centered serif title and original source content. Its iframe expanded to full article height (17,162px at a 500px browser viewport) and native document scrolling. The first matrix fit within its parent. Activating Fine-grained 50% changed matrix cells; changing the sensitivity slider updated the summary. Original labs execute in the actual reader.
+
+**Final screenshot review:** desktop library at `/tmp/margin-qa/desktop.png` expresses the approved identity with a composed large serif opening, original technical plate and four distinct technical miniatures. Titles, lecture metadata, genuine lab labels, saves and sharing are clearly separated. Phone pruning and channel screenshots show complete matrices, usable controls, readable article text and quiet sticky reader navigation.
+
+**Evidence limitation identified:** the initial `/tmp/margin-qa/mobile.png` full-page capture repeats the opening composition at intervals, suggesting a capture or development refresh issue. Root was asked to recapture a settled final mobile library before using it as full-page evidence. The displayed phone hero itself is legible and its Explore anchor offers direct collection access.
+
+**Root verification reported:** production preview checks passed all four source pages, eight lab interactions, saved persistence, search/filter/share, sibling `#s4`, 390px inner/outer widths, all PDFs and no runtime exceptions. Implementer also reports 320px layout checks. These are attributed to root/implementer; PM independently reviewed the visual evidence and two pruning interactions above.
+
+**Corrections reported complete:** share retains exact current section URL; fallback uses native dialog; generated standalone pages include Library return while preserved source originals stay unchanged; reader removes duplicate generated standalone chrome. Reader share button receives a final accessible label before release.
+
+**Assessment:** design and product functionality approved for publication, contingent on final deployed-site checks and corrected mobile capture. No remaining observed product blocker in the inspected article renders.
