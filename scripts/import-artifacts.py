@@ -1,7 +1,7 @@
-"""Import neighboring Philosopher sources and render the review with the Node helper."""
+"""Refresh the published library from its neighboring Philosopher HTML sources."""
 from pathlib import Path
 from html.parser import HTMLParser
-import json, re, shutil, math, subprocess
+import json, re, shutil, math
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parent / 'philosopher-output'
@@ -12,7 +12,6 @@ ORDER = [
  ('neural-network-pruning.html', 'The art of cutting a model', 'The practical part', 'Interactive', 'Lectures 04–06', 'Explore what to cut, what to keep, and how a smaller network finds its footing again.'),
  ('pruning-loss-and-reconstruction.html', 'Which deletion hurts least?', 'The mathematics', 'Worked examples', 'Lecture 06 review', 'Work through loss, curvature, channel selection, and least-squares reconstruction.'),
  ('pruning-budgets-and-efficiency.html', 'Count what pruning really saves', 'The resource budget', 'Worked examples', 'Lecture 06 review', 'Calculate sparsity, memory, computation, layer budgets, and fine-tuning schedules.'),
- ('review-and-mock-questions.html', 'The pruning review and practice bank', 'Test your understanding', 'Practice', 'Lecture 06 review', 'Read the closing review, check concept coverage, and try 24 key questions and 28 mock problems with worked answers.'),
 ]
 class Text(HTMLParser):
  def __init__(self): super().__init__(); self.parts=[]; self.skip=0
@@ -26,17 +25,15 @@ def plain(value):
  p=Text();p.feed(value);return ' '.join(filter(None,p.parts))
 destination = ROOT/'public/artifacts'
 destination.mkdir(parents=True, exist_ok=True)
-shutil.copy2(SOURCE/'review-and-mock-questions.md', destination/'review-and-mock-questions.md')
-subprocess.run(['node', str(ROOT/'scripts/render-review.mjs')], check=True)
-# Keep the review's linked slide evidence available at its original relative path.
-slide_dir = ROOT/'public/cache/lecture6/slides'
-slide_dir.mkdir(parents=True, exist_ok=True)
-shutil.copy2(ROOT.parent/'cache/lecture6/slides/slide-56.png', slide_dir/'slide-56.png')
 items=[]
 for index,(file,title,kicker,kind,lecture,description) in enumerate(ORDER):
- src=(destination if file == 'review-and-mock-questions.html' else SOURCE)/file
+ src=SOURCE/file
  html=src.read_text()
- full=plain(html)
+ # Search the published reading text, excluding the withdrawn packet link.
+ full=plain(html.replace(
+  'Test yourself using the authored question bank and worked key in <a href="review-and-mock-questions.md">Review and Mock Questions</a>, and return to the cited slides to distinguish examples from course statements.',
+  'Return to the cited slides to distinguish examples from course statements.',
+ ))
  sections=[]
  for number,m in enumerate(re.finditer(r'<h2([^>]*)>(.*?)</h2>',html,re.S),1):
   id_match=re.search(r'id=[\"\']([^\"\']+)',m[1])
@@ -47,4 +44,4 @@ for index,(file,title,kicker,kind,lecture,description) in enumerate(ORDER):
 for n in [2,3,4,5,6]:shutil.copy2(ROOT.parent/f'Lecture{n}.pdf',ROOT/'public'/f'Lecture{n}.pdf')
 (ROOT/'src/data').mkdir(parents=True,exist_ok=True)
 (ROOT/'src/data/artifacts.json').write_text(json.dumps(items,indent=2,ensure_ascii=False)+'\n')
-print(f'Imported {len(items)} study pages, the original review Markdown, and 5 source slide decks.')
+print(f'Imported {len(items)} study pages and 5 source slide decks.')
