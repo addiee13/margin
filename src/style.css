@@ -1040,3 +1040,214 @@ dialog.share-dialog::backdrop {
     stroke-dashoffset: 0;
   }
 }
+
+/* Practice is the natural next step from reading, using Margin's existing tokens. */
+.header-practice {
+  margin-left: auto;
+  font-size: 13px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--violet);
+}
+.header-practice + .header-library {
+  margin-left: 0;
+}
+.hero-actions {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.practice-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 48px;
+  border-radius: 8px;
+  padding: 13px 20px;
+  background: var(--ink);
+  color: var(--sheet);
+  font: 14px/1.6 var(--sans);
+  transition: background 160ms;
+}
+.practice-primary:hover {
+  background: var(--violet);
+}
+.practice-primary > svg {
+  transition: transform 180ms;
+}
+.practice-primary:is(:hover, :focus-visible) > svg {
+  transform: translate(3px, -3px);
+}
+.practice-home {
+  max-width: 1256px;
+  margin: auto;
+  padding: 0 48px 48px;
+}
+.practice-invitation {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 48px;
+  padding: 32px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--sheet);
+}
+.practice-copy h2 {
+  font: 400 34px/1.15 var(--serif);
+  letter-spacing: -0.7px;
+  margin: 16px 0;
+  text-wrap: balance;
+}
+.practice-copy > p {
+  font: 15px/1.8 var(--sans);
+  color: var(--muted);
+  max-width: 40rem;
+}
+.practice-actions {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-direction: column;
+  margin-top: 24px;
+}
+.practice-secondary {
+  font: 12px/1.7 var(--sans);
+  color: var(--muted);
+  display: block;
+  padding: 8px 0;
+  min-height: 44px;
+}
+.practice-secondary span {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--violet);
+  font-size: 13px;
+}
+.practice-secondary svg {
+  transition: transform 180ms;
+}
+.practice-secondary:is(:hover, :focus-visible) svg {
+  transform: translateX(4px);
+}
+.practice-format {
+  border-left: 1px solid var(--rule);
+  padding-left: 32px;
+}
+.practice-format > div {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 24px 0;
+}
+.practice-format strong {
+  font: 400 32px/1 var(--serif);
+  color: var(--violet);
+  min-width: 65px;
+}
+.practice-format > div span {
+  font: 13px/1.7 var(--sans);
+  color: var(--muted);
+}
+.practice-format p {
+  font: 12px/1.8 var(--sans);
+  color: var(--muted);
+  margin: 24px 0 0;
+}
+.reader-practice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 12px var(--sans);
+  color: var(--violet);
+  min-height: 44px;
+}
+.after-reading {
+  margin: 32px 0 0;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+.after-reading .practice-format {
+  border-left: 0;
+  border-top: 1px solid var(--rule);
+  padding: 24px 0 0;
+}
+.after-reading .practice-format > div {
+  display: inline-flex;
+  margin: 16px 24px 8px 0;
+}
+.after-reading .practice-copy h2 {
+  font-size: 30px;
+}
+@media (max-width: 950px) {
+  .reader-practice {
+    display: none;
+  }
+  .practice-invitation {
+    gap: 24px;
+  }
+  .practice-format {
+    padding-left: 24px;
+  }
+}
+@media (max-width: 700px) {
+  .header-practice {
+    font-size: 12px;
+  }
+  .site-header {
+    gap: 16px;
+  }
+  .hero-actions {
+    gap: 16px;
+  }
+  .hero-actions .practice-primary {
+    width: 100%;
+  }
+  .practice-home {
+    padding: 0 22px 32px;
+  }
+  .practice-invitation {
+    grid-template-columns: 1fr;
+    padding: 24px;
+    gap: 24px;
+  }
+  .practice-copy h2 {
+    font-size: 29px;
+  }
+  .practice-format {
+    border-left: 0;
+    border-top: 1px solid var(--rule);
+    padding: 24px 0 0;
+  }
+  .practice-format > div {
+    margin: 16px 0;
+  }
+  .practice-copy > p {
+    font-size: 14px;
+  }
+  .practice-actions {
+    gap: 12px;
+  }
+  .practice-primary {
+    width: 100%;
+  }
+  .after-reading {
+    margin: 24px 12px 0;
+    padding: 20px;
+  }
+  .after-reading .practice-copy h2 {
+    font-size: 26px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .practice-primary:is(:hover, :focus-visible) > svg,
+  .practice-secondary:is(:hover, :focus-visible) svg {
+    transform: none;
+  }
+}
+.after-reading .practice-format > .section-kicker {
+  display: block;
+}

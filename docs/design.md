@@ -127,3 +127,13 @@ Design-system queries “personal reading library editorial” and narrower “k
 ## Review before release
 
 Review actual rendered desktop and phone library/reader states. Verify all four notes, working labs in both companions, one deep link into channels, next/previous reading order, search result and empty result, Saved persist/empty state, share success/fallback, keyboard navigation, reduced motion, and public source PDF links. Premium appearance and working reading flow must both pass; a compiled bundle or clean source alone does not establish either.
+
+## Lecture 6 practice integration
+
+The primary homepage action is “Start a mock exam”; exploring the reading collection remains a secondary link. A paper-like invitation introduces the format before the shelf, and every reader ends with the same invitation. The restrained “Browse all 72 questions” link serves people who want to work through one concept at a time. A small Practice navigation link supports repeat visits without interrupting reading.
+
+Reuse the existing Text Highlighter for the invitation and Letter Swap for short action labels. Letter Swap now responds to focus on its enclosing link or button. Keep ink primary buttons, violet focus and active controls, amber annotations, Charter reading headings, DM Sans controls, IBM Plex Mono metadata, thin rules, and the existing space/radius system. No recurring motion or forced dialogs.
+
+The standalone published quiz defaults to the mock exam, with direct `#exam`, `#bank`, and `#coverage` views. Its compact introduction keeps setup reachable on phones. Choice/numerical grades retain explicit green/red feedback; written answers remain self-reviewed. State and view changes work after same-document fragment navigation as well as hard reload.
+
+Local production-preview review passed desktop and phone renders; exam start is visible at 390px without scrolling. Browser checks passed primary/secondary entry points, same-document view links, a 13-question default paper, answer gating, saved numeric feedback, source HTTP 200 responses, reader section navigation and practice prompts, save/search, 320–1440px widths, and reduced motion. The existing pruning APoZ lab still executes in the full-height reader. Production verification remains a release gate under `docs/deployment.md`.

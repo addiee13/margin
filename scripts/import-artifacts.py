@@ -29,11 +29,7 @@ items=[]
 for index,(file,title,kicker,kind,lecture,description) in enumerate(ORDER):
  src=SOURCE/file
  html=src.read_text()
- # Search the published reading text, excluding the withdrawn packet link.
- full=plain(html.replace(
-  'Test yourself using the authored question bank and worked key in <a href="review-and-mock-questions.md">Review and Mock Questions</a>, and return to the cited slides to distinguish examples from course statements.',
-  'Return to the cited slides to distinguish examples from course statements.',
- ))
+ full=plain(html)
  sections=[]
  for number,m in enumerate(re.finditer(r'<h2([^>]*)>(.*?)</h2>',html,re.S),1):
   id_match=re.search(r'id=[\"\']([^\"\']+)',m[1])

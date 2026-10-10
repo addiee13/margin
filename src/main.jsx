@@ -116,7 +116,12 @@ function NeuralPlate() {
 }
 function ArtifactArt({ index, id }) {
   return (
-    <svg className="artifact-art" viewBox="0 0 150 90" aria-hidden="true" data-illustration={id}>
+    <svg
+      className="artifact-art"
+      viewBox="0 0 150 90"
+      aria-hidden="true"
+      data-illustration={id}
+    >
       {index === 1 ? (
         <>
           <rect
@@ -206,28 +211,69 @@ function ArtifactArt({ index, id }) {
             stroke="#8578d0"
             strokeWidth="2.5"
           />
-          <path d="M79 63H106V49" fill="none" stroke="#c9ae89" strokeDasharray="3 3" />
+          <path
+            d="M79 63H106V49"
+            fill="none"
+            stroke="#c9ae89"
+            strokeDasharray="3 3"
+          />
           <path d="M79 70V75M106 70V75" stroke="#bcb4e7" />
           <circle cx="79" cy="63" r="4" fill="#5b4fc7" />
           <circle cx="106" cy="49" r="4" fill="#fde7c4" stroke="#c9ae89" />
-          <path d="M118 51V61M115 54L118 51L121 54M115 58L118 61L121 58" fill="none" stroke="#c9ae89" />
-          <text x="12" y="14">L</text>
-          <text x="79" y="85" textAnchor="middle">w</text>
-          <text x="106" y="85" textAnchor="middle">0</text>
-          <text x="125" y="60">ΔL</text>
+          <path
+            d="M118 51V61M115 54L118 51L121 54M115 58L118 61L121 58"
+            fill="none"
+            stroke="#c9ae89"
+          />
+          <text x="12" y="14">
+            L
+          </text>
+          <text x="79" y="85" textAnchor="middle">
+            w
+          </text>
+          <text x="106" y="85" textAnchor="middle">
+            0
+          </text>
+          <text x="125" y="60">
+            ΔL
+          </text>
         </g>
       ) : id === "pruning-budgets-and-efficiency" ? (
         <g strokeLinecap="round" strokeLinejoin="round">
-          <path d="M34 62A41 41 0 0 1 116 62" fill="none" stroke="#eeebfb" strokeWidth="10" />
-          <path d="M34 62A41 41 0 0 1 87 23" fill="none" stroke="#8578d0" strokeWidth="10" />
-          <path d="M32 62H38M44 32L48 36M75 18V25M102 32L107 27M112 62H118" stroke="#bcb4e7" />
+          <path
+            d="M34 62A41 41 0 0 1 116 62"
+            fill="none"
+            stroke="#eeebfb"
+            strokeWidth="10"
+          />
+          <path
+            d="M34 62A41 41 0 0 1 87 23"
+            fill="none"
+            stroke="#8578d0"
+            strokeWidth="10"
+          />
+          <path
+            d="M32 62H38M44 32L48 36M75 18V25M102 32L107 27M112 62H118"
+            stroke="#bcb4e7"
+          />
           <path d="M99 28L106 19" stroke="#c9ae89" strokeWidth="3" />
           <circle cx="107" cy="18" r="3" fill="#fde7c4" stroke="#c9ae89" />
           <path d="M75 62L55 40" stroke="#5b4fc7" strokeWidth="2.5" />
-          <circle cx="75" cy="62" r="5" fill="#fffefb" stroke="#5b4fc7" strokeWidth="1.5" />
+          <circle
+            cx="75"
+            cy="62"
+            r="5"
+            fill="#fffefb"
+            stroke="#5b4fc7"
+            strokeWidth="1.5"
+          />
           <path d="M59 70H91" stroke="#ded9ce" />
-          <text x="34" y="83" textAnchor="middle">cost</text>
-          <text x="112" y="83" textAnchor="middle">budget</text>
+          <text x="34" y="83" textAnchor="middle">
+            cost
+          </text>
+          <text x="112" y="83" textAnchor="middle">
+            budget
+          </text>
         </g>
       ) : (
         <>
@@ -302,6 +348,57 @@ function ShareDialog({ url, onClose }) {
         </button>
       </div>
     </dialog>
+  );
+}
+const practiceUrl = (view = "exam") => `${base}practice/lecture6.html#${view}`;
+function PracticeInvitation({ afterReading = false }) {
+  return (
+    <section
+      className={`practice-invitation${afterReading ? " after-reading" : ""}`}
+      aria-label="Lecture 6 practice"
+    >
+      <div className="practice-copy">
+        <span className="section-kicker">Lecture 6 · Pruning practice</span>
+        <h2>
+          {afterReading
+            ? "You’ve explored the ideas. Now try them."
+            : "See what stays with you."}
+        </h2>
+        <p>
+          A fresh paper, drawn from 72 questions.{" "}
+          <TextHighlighter>Start with a mock exam</TextHighlighter> to put the
+          concepts and calculations together, then use the worked answers to
+          find your next step.
+        </p>
+        <div className="practice-actions">
+          <a className="text-button practice-primary" href={practiceUrl()}>
+            <LetterSwap label="Start a mock exam" />
+            <Icon type={ArrowUpRight} />
+          </a>
+          <a className="practice-secondary" href={practiceUrl("bank")}>
+            Prefer one concept at a time?{" "}
+            <span>
+              Browse all 72 questions <Icon type={ArrowRight} />
+            </span>
+          </a>
+        </div>
+      </div>
+      <div className="practice-format">
+        <span className="section-kicker">Your paper, at a glance</span>
+        <div>
+          <strong>5</strong>
+          <span>Multiple choice or true / false</span>
+        </div>
+        <div>
+          <strong>7–10</strong>
+          <span>Calculations and explanations</span>
+        </div>
+        <p>
+          Answers after submission. No timer. Written answers are self-reviewed.
+          Lecture 6 practice, not an exam prediction.
+        </p>
+      </div>
+    </section>
   );
 }
 function App() {
@@ -405,6 +502,9 @@ function App() {
           margin<span className="wordmark-dot">.</span>
         </a>
         <span className="header-note">A personal collection, shared.</span>
+        <a className="header-practice" href={practiceUrl()}>
+          <LetterSwap label="Practice" />
+        </a>
         <a className="header-library" href="#/">
           <LetterSwap label="The library" /> <Icon type={BookOpen} />
         </a>
@@ -440,22 +540,37 @@ function App() {
                 <br className="desktop-br" /> Essays, diagrams, and little
                 experiments
                 <br className="desktop-br" /> on making intelligent things more
-                efficient.
+                efficient. Then put your understanding to work with a Lecture 6
+                mock exam.
               </p>
-              <a href="#collection" className="hero-link">
-                Explore the collection{" "}
-                <span>
-                  <Icon type={ArrowRight} />
-                </span>
-              </a>
+              <div className="hero-actions">
+                <a
+                  href={practiceUrl()}
+                  className="text-button practice-primary"
+                >
+                  <LetterSwap label="Start a mock exam" />
+                  <Icon type={ArrowUpRight} />
+                </a>
+                <a href="#collection" className="hero-link">
+                  Explore the collection{" "}
+                  <span>
+                    <Icon type={ArrowRight} />
+                  </span>
+                </a>
+              </div>
               <div className="hero-meta">
-                <span>{String(artifacts.length).padStart(2, "0")} artifacts</span>
+                <span>
+                  {String(artifacts.length).padStart(2, "0")} artifacts
+                </span>
                 <span>Lectures 02–06</span>
                 <span>Made for the curious</span>
               </div>
             </div>
             <NeuralPlate />
           </section>
+          <div className="practice-home">
+            <PracticeInvitation />
+          </div>
           <section id="collection" className="collection">
             <div className="collection-heading">
               <div>
@@ -463,7 +578,8 @@ function App() {
                 <h2>Ideas to spend time with.</h2>
               </div>
               <span className="collection-count">
-                {filtered.length.toString().padStart(2, "0")} / {String(artifacts.length).padStart(2, "0")}
+                {filtered.length.toString().padStart(2, "0")} /{" "}
+                {String(artifacts.length).padStart(2, "0")}
               </span>
             </div>
             <div className="tools">
@@ -730,6 +846,9 @@ function Reader({ note, route, saved, onSave, onShare }) {
         <a href="#/" className="back-link">
           <Icon type={ArrowLeft} /> Library
         </a>
+        <a className="reader-practice" href={practiceUrl()}>
+          Try a mock exam <Icon type={ArrowUpRight} />
+        </a>
         <span className="reader-current">
           {String(note.order).padStart(2, "0")} / {note.kicker}
         </span>
@@ -825,6 +944,7 @@ function Reader({ note, route, saved, onSave, onShare }) {
               className="article-frame"
             />
           )}
+          <PracticeInvitation afterReading />
           <div className="reader-next">
             {index > 0 ? (
               <a href={routeFor(artifacts[index - 1].id)}>

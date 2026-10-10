@@ -33,3 +33,9 @@ Design and product review records are in `docs/`. Fancy Components adaptations a
 ## Agent release instructions
 
 Before committing, pushing, or deploying, read [AGENTS.md](AGENTS.md) and follow the [release guide](docs/deployment.md). It covers focused staging, safe branch handling, and verification of the matching GitHub Pages deployment and live feature.
+
+## Practice
+
+The homepage and every in-app reader offer a Lecture 6 mock exam as the next step from reading. `practice/lecture6.html#exam` opens the exam setup; `practice/lecture6.html#bank` opens all 72 questions for focused practice. The exam draws five choice/true-false questions and seven to ten calculations/explanations. Automatic results and worked answers appear after submission; written answers are self-reviewed. Progress stays in the current browser.
+
+Run `python3 scripts/import-quiz.py` to refresh the committed standalone quiz from the neighboring `philosopher-output/lecture6-mock-quiz.html`. The deployment builds from `public/practice/` and does not require the parent coursework directory. The import adapts source links to the published paths and keeps exam/bank URLs stable.

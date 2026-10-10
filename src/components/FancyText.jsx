@@ -2,7 +2,7 @@
  * Text Highlighter and Letter Swap Forward, https://github.com/danielpetho/fancy
  * See THIRD_PARTY_NOTICES.md for license and source links.
  */
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   motion,
   useInView,
@@ -59,6 +59,11 @@ export function LetterSwap({ label }) {
     ]);
     setBlocked(false);
   }
+  useEffect(() => {
+    const control = scope.current?.closest("a,button");
+    control?.addEventListener("focus", swap);
+    return () => control?.removeEventListener("focus", swap);
+  });
   return (
     <span
       className="letter-swap"

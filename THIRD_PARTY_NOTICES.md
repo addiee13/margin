@@ -27,3 +27,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Lecture 6 practice page
+
+`public/practice/lecture6.html` contains native adaptations of the same Text Highlighter and Letter Swap treatments, with the MIT license included inside the standalone HTML. It also embeds DM Sans and IBM Plex Mono for offline use; their SIL Open Font License 1.1 notices are included in that file. No new animation dependency is introduced.
