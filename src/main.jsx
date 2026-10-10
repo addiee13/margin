@@ -11,6 +11,8 @@ import {
   Link,
   BookOpen,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 import artifacts from "./data/artifacts.json";
 import "./style.css";
@@ -597,6 +599,7 @@ function Reader({ note, route, saved, onSave, onShare }) {
   const [html, setHtml] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [toc, setToc] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   useEffect(() => {
     setLoaded(false);
     setHtml("");
@@ -663,7 +666,8 @@ function Reader({ note, route, saved, onSave, onShare }) {
       wrap.appendChild(t);
     });
     const resize = () => {
-      f.style.height = `${Math.max(d.documentElement.scrollHeight, d.body.scrollHeight)}px`;
+      const sheet = d.querySelector(".sheet");
+      f.style.height = `${Math.ceil(sheet ? sheet.getBoundingClientRect().bottom : d.body.scrollHeight)}px`;
     };
     resize();
     new ResizeObserver(resize).observe(d.body);
@@ -699,10 +703,20 @@ function Reader({ note, route, saved, onSave, onShare }) {
         </span>
         <div className="reader-actions">
           <button
-            aria-label="Show contents"
+            className="sidebar-toggle"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            aria-expanded={sidebarOpen}
+            aria-controls="reader-sidebar"
+          >
+            <Icon type={sidebarOpen ? PanelLeftClose : PanelLeftOpen} />
+            {sidebarOpen ? "Hide sidebar" : "Show sidebar"}
+          </button>
+          <button
+            aria-label={toc ? "Hide contents" : "Show contents"}
             className="contents-toggle"
             onClick={() => setToc(!toc)}
             aria-expanded={toc}
+            aria-controls="reader-sidebar"
           >
             <Icon type={Menu} />
             Contents
@@ -715,15 +729,39 @@ function Reader({ note, route, saved, onSave, onShare }) {
           >
             <Icon type={Bookmark} fill={saved ? "currentColor" : "none"} />
           </button>
-          <button className="share-button" aria-label="Share note" onClick={onShare}>
+          <button
+            className="share-button"
+            aria-label="Share note"
+            onClick={onShare}
+          >
             <Icon type={Link} />
             <span>Share note</span>
           </button>
         </div>
       </div>
-      <div className="reader-layout">
-        <aside className={toc ? "reader-toc open" : "reader-toc"}>
-          <span className="section-kicker">In this note</span>
+      <div
+        className={
+          sidebarOpen ? "reader-layout" : "reader-layout sidebar-collapsed"
+        }
+      >
+        <aside
+          id="reader-sidebar"
+          className={toc ? "reader-toc open" : "reader-toc"}
+        >
+          <div className="toc-heading">
+            <span className="section-kicker">In this note</span>
+            <button
+              className="sidebar-close icon-button"
+              aria-label="Close sidebar"
+              onClick={() => {
+                setSidebarOpen(false);
+                setToc(false);
+                document.querySelector(".sidebar-toggle")?.focus();
+              }}
+            >
+              <Icon type={X} />
+            </button>
+          </div>
           <nav aria-label="Note contents">
             {note.sections.map((s) => (
               <a

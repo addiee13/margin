@@ -591,6 +591,32 @@ h1 {
   min-height: 44px;
   font-size: 12px;
 }
+.sidebar-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 10px;
+  font-size: 12px;
+  border-radius: 4px;
+}
+.sidebar-toggle:hover {
+  background: var(--violet-wash);
+}
+.toc-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+@media (min-width: 701px) {
+  .reader-layout.sidebar-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sidebar-collapsed .reader-toc {
+    display: none;
+  }
+}
 .reader-layout {
   display: grid;
   grid-template-columns: 230px 1fr;
@@ -876,6 +902,10 @@ h1 {
   }
   .contents-toggle {
     display: flex;
+  }
+  .sidebar-toggle,
+  .sidebar-close {
+    display: none;
   }
   .reader-layout {
     display: block;
