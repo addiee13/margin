@@ -114,3 +114,11 @@ The product manager reviews the designer's specification, the implementer's real
 **Corrections reported complete:** share retains exact current section URL; fallback uses native dialog; generated standalone pages include Library return while preserved source originals stay unchanged; reader removes duplicate generated standalone chrome. Reader share button receives a final accessible label before release.
 
 **Assessment:** design and product functionality approved for publication, contingent on final deployed-site checks and corrected mobile capture. No remaining observed product blocker in the inspected article renders.
+
+### Settled mobile review and navigation correction
+
+**Observed:** PM inspected `/tmp/margin-qa/mobile-settled.png`. The complete phone library renders cleanly from masthead through all four notes and footer; filters, search, note actions and the reading path remain clear. No clipping or unintended repeated content remains. Compact title wrapping is appropriate to the phone width.
+
+**Root diagnosis/correction:** global smooth scrolling disrupted full-page screenshot capture and could leave the native Explore anchor unsettled. Root changed global scroll behavior to immediate while retaining custom visual animation and reader-controlled section motion. This makes reaching the collection predictable.
+
+**Assessment:** desktop, complete phone library and phone article lab visual review pass. Publication approval now depends only on final live deployment verification.
