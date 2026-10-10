@@ -114,9 +114,9 @@ function NeuralPlate() {
     </div>
   );
 }
-function ArtifactArt({ index }) {
+function ArtifactArt({ index, id }) {
   return (
-    <svg className="artifact-art" viewBox="0 0 150 90" aria-hidden="true">
+    <svg className="artifact-art" viewBox="0 0 150 90" aria-hidden="true" data-illustration={id}>
       {index === 1 ? (
         <>
           <rect
@@ -197,6 +197,38 @@ function ArtifactArt({ index }) {
             </g>
           ))}
         </>
+      ) : id === "pruning-loss-and-reconstruction" ? (
+        <g strokeLinecap="round" strokeLinejoin="round">
+          <path d="M22 12V72H134" fill="none" stroke="#ded9ce" />
+          <path
+            d="M32 20C44 78 102 78 126 20"
+            fill="none"
+            stroke="#8578d0"
+            strokeWidth="2.5"
+          />
+          <path d="M79 63H106V49" fill="none" stroke="#c9ae89" strokeDasharray="3 3" />
+          <path d="M79 70V75M106 70V75" stroke="#bcb4e7" />
+          <circle cx="79" cy="63" r="4" fill="#5b4fc7" />
+          <circle cx="106" cy="49" r="4" fill="#fde7c4" stroke="#c9ae89" />
+          <path d="M118 51V61M115 54L118 51L121 54M115 58L118 61L121 58" fill="none" stroke="#c9ae89" />
+          <text x="12" y="14">L</text>
+          <text x="79" y="85" textAnchor="middle">w</text>
+          <text x="106" y="85" textAnchor="middle">0</text>
+          <text x="125" y="60">ΔL</text>
+        </g>
+      ) : id === "pruning-budgets-and-efficiency" ? (
+        <g strokeLinecap="round" strokeLinejoin="round">
+          <path d="M34 62A41 41 0 0 1 116 62" fill="none" stroke="#eeebfb" strokeWidth="10" />
+          <path d="M34 62A41 41 0 0 1 87 23" fill="none" stroke="#8578d0" strokeWidth="10" />
+          <path d="M32 62H38M44 32L48 36M75 18V25M102 32L107 27M112 62H118" stroke="#bcb4e7" />
+          <path d="M99 28L106 19" stroke="#c9ae89" strokeWidth="3" />
+          <circle cx="107" cy="18" r="3" fill="#fde7c4" stroke="#c9ae89" />
+          <path d="M75 62L55 40" stroke="#5b4fc7" strokeWidth="2.5" />
+          <circle cx="75" cy="62" r="5" fill="#fffefb" stroke="#5b4fc7" strokeWidth="1.5" />
+          <path d="M59 70H91" stroke="#ded9ce" />
+          <text x="34" y="83" textAnchor="middle">cost</text>
+          <text x="112" y="83" textAnchor="middle">budget</text>
+        </g>
       ) : (
         <>
           {Array.from({ length: 32 }, (_, i) => (
@@ -510,7 +542,7 @@ function App() {
                     <p>{a.description}</p>
                     <span className="reading-time">≈ {a.minutes} min read</span>
                   </div>
-                  <ArtifactArt index={a.order} />
+                  <ArtifactArt index={a.order} id={a.id} />
                   <div className="artifact-actions">
                     <button
                       className={
