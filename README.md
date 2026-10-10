@@ -27,3 +27,7 @@ Vite uses `/margin/` for GitHub Pages. Reader URLs use a hash route (`#/read/neu
 Bookmarks and the last opened note are stored in the current browser. Sharing copies the actual note or section URL; a keyboard-accessible dialog provides a manual-copy fallback. No accounts or server are required.
 
 Design and product review records are in `docs/`. Fancy Components adaptations and their MIT license are documented in `THIRD_PARTY_NOTICES.md`.
+
+## Agent release instructions
+
+Before committing, pushing, or deploying, read [AGENTS.md](AGENTS.md) and follow the [release guide](docs/deployment.md). It covers focused staging, safe branch handling, and verification of the matching GitHub Pages deployment and live feature.
