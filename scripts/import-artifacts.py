@@ -8,6 +8,7 @@ SOURCE = ROOT.parent / 'philosopher-output'
 ORDER = [
  ('lecture2-efficient-ai.html', 'Why AI has to get lighter', 'The big picture', 'Overview', 'Lecture 02', 'Start with the question: how do we make powerful models fit the world we live in?'),
  ('neural-network-building-blocks.html', 'Inside a neural network', 'The foundations', 'Interactive', 'Lectures 02–03', 'Build an intuition for layers, channels, and the tensors that hold it all together.'),
+ ('channels-kernels-and-filters.html', 'Channels, kernels, and filters', 'One idea at a time', 'Interactive', 'Lecture 03', 'Untangle the three terms with an RGB example, a kernel experiment, and a weight-count check.'),
  ('lecture3-efficient-ai-deep.html', 'What makes a network expensive?', 'The deeper look', 'Deep dive', 'Lecture 03', 'Count parameters, activations, and the real cost of moving from a model to a device.'),
  ('neural-network-pruning.html', 'The art of cutting a model', 'The practical part', 'Interactive', 'Lectures 04–06', 'Explore what to cut, what to keep, and how a smaller network finds its footing again.'),
  ('pruning-loss-and-reconstruction.html', 'Which deletion hurts least?', 'The mathematics', 'Worked examples', 'Lecture 06 review', 'Work through loss, curvature, channel selection, and least-squares reconstruction.'),

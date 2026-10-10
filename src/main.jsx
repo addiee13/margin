@@ -114,7 +114,7 @@ function NeuralPlate() {
     </div>
   );
 }
-function ArtifactArt({ index, id }) {
+function ArtifactArt({ id }) {
   return (
     <svg
       className="artifact-art"
@@ -122,7 +122,7 @@ function ArtifactArt({ index, id }) {
       aria-hidden="true"
       data-illustration={id}
     >
-      {index === 1 ? (
+      {id === "lecture2-efficient-ai" ? (
         <>
           <rect
             x="35"
@@ -158,7 +158,7 @@ function ArtifactArt({ index, id }) {
             less, better
           </text>
         </>
-      ) : index === 2 ? (
+      ) : id === "neural-network-building-blocks" ? (
         <>
           {[0, 1, 2].map((i) => (
             <g key={i} transform={`translate(${30 + i * 26},${19 + i * 10})`}>
@@ -179,7 +179,22 @@ function ArtifactArt({ index, id }) {
             </g>
           ))}
         </>
-      ) : index === 3 ? (
+      ) : id === "channels-kernels-and-filters" ? (
+        <g strokeLinecap="round" strokeLinejoin="round">
+          {[0, 1, 2].map((i) => (
+            <g key={i} transform={`translate(${15 + i * 8},${18 + i * 8})`}>
+              <rect width="38" height="38" rx="3" fill="#eeebfb" stroke="#bcb4e7" />
+              <path d="M13 0V38M25 0V38M0 13H38M0 25H38" stroke="#bcb4e7" />
+            </g>
+          ))}
+          <path d="M72 44H86M82 40L86 44L82 48" fill="none" stroke="#5b4fc7" />
+          <rect x="94" y="27" width="35" height="35" rx="3" fill="#fde7c4" stroke="#c9ae89" />
+          <path d="M106 27V62M117 27V62M94 39H129M94 50H129" stroke="#c9ae89" />
+          <rect x="106" y="39" width="11" height="11" fill="#5b4fc7" />
+          <text x="45" y="83" textAnchor="middle">3 in</text>
+          <text x="111" y="83" textAnchor="middle">1 out</text>
+        </g>
+      ) : id === "lecture3-efficient-ai-deep" ? (
         <>
           {[62, 94, 48, 112].map((w, i) => (
             <g key={i}>
@@ -658,7 +673,7 @@ function App() {
                     <p>{a.description}</p>
                     <span className="reading-time">≈ {a.minutes} min read</span>
                   </div>
-                  <ArtifactArt index={a.order} id={a.id} />
+                  <ArtifactArt id={a.id} />
                   <div className="artifact-actions">
                     <button
                       className={
