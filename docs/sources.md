@@ -1,6 +1,6 @@
 # Source artifact inventory
 
-The library publishes four authored study pages. Their text, source qualifications, diagrams and interactive scripts come from the neighboring `philosopher-output` folder. The original files remain unchanged. The build adds navigation and responsive styling to the published distribution.
+The library publishes seven study pages: six source HTML documents and a readable edition of the review Markdown. Their text, source qualifications, diagrams and interactive scripts come from the neighboring `philosopher-output` folder. The original files remain unchanged. The build adds navigation and responsive styling to the published distribution.
 
 | Original file | SHA-256 |
 | --- | --- |
@@ -13,8 +13,12 @@ The referenced course slide decks are included as `Lecture2.pdf` through `Lectur
 
 ## Refreshing the collection
 
-From this repository, run `python3 scripts/import-artifacts.py` while the neighboring `philosopher-output` folder and lecture PDFs are available. The importer copies source pages and slide files and rebuilds `src/data/artifacts.json`. It uses only the Python standard library.
+From this repository, run `python3 scripts/import-artifacts.py` while the neighboring `philosopher-output` folder and lecture PDFs are available. The importer copies source pages and slide files and rebuilds `src/data/artifacts.json`. The importer uses the Python standard library and invokes the Node Markdown renderer; run `npm ci` first when dependencies are absent.
 
 The importer has an explicit reading-order list. To add a page, extend `ORDER` with its filename, short library title, reading context, kind, lecture label and description. `Interactive` is the kind used by the With labs filter. Titles, sections, search text and reading times are generated from each original HTML page. Then run `npm run build` and review the new reader and links before pushing.
 
 Browser bookmarks stay in local browser storage; the site does not create accounts or synchronize notes between visitors.
+
+## Lecture 6 review additions
+
+The collection also includes `pruning-loss-and-reconstruction.html`, `pruning-budgets-and-efficiency.html`, and the readable `review-and-mock-questions.html` edition of the preserved `review-and-mock-questions.md` packet. The six source HTML pages are copied without content changes. The question bank has 24 conceptual questions and 28 authored mock problems with worked answers; instructor slide content is labeled separately. `scripts/render-review.mjs` renders the Markdown into the paper-style HTML reader. The linked final-slide PNG is published at `public/cache/lecture6/slides/slide-56.png`. Distribution links from the supplements open the readable question bank while its footer retains the Markdown download.

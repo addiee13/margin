@@ -1,7 +1,7 @@
-"""Refresh the library from its neighboring Philosopher output (Python standard library)."""
+"""Import neighboring Philosopher sources and render the review with the Node helper."""
 from pathlib import Path
 from html.parser import HTMLParser
-import json, re, shutil, math
+import json, re, shutil, math, subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT.parent / 'philosopher-output'
@@ -10,6 +10,9 @@ ORDER = [
  ('neural-network-building-blocks.html', 'Inside a neural network', 'The foundations', 'Interactive', 'Lectures 02–03', 'Build an intuition for layers, channels, and the tensors that hold it all together.'),
  ('lecture3-efficient-ai-deep.html', 'What makes a network expensive?', 'The deeper look', 'Deep dive', 'Lecture 03', 'Count parameters, activations, and the real cost of moving from a model to a device.'),
  ('neural-network-pruning.html', 'The art of cutting a model', 'The practical part', 'Interactive', 'Lectures 04–06', 'Explore what to cut, what to keep, and how a smaller network finds its footing again.'),
+ ('pruning-loss-and-reconstruction.html', 'Which deletion hurts least?', 'The mathematics', 'Worked examples', 'Lecture 06 review', 'Work through loss, curvature, channel selection, and least-squares reconstruction.'),
+ ('pruning-budgets-and-efficiency.html', 'Count what pruning really saves', 'The resource budget', 'Worked examples', 'Lecture 06 review', 'Calculate sparsity, memory, computation, layer budgets, and fine-tuning schedules.'),
+ ('review-and-mock-questions.html', 'The pruning review and practice bank', 'Test your understanding', 'Practice', 'Lecture 06 review', 'Read the closing review, check concept coverage, and try 24 key questions and 28 mock problems with worked answers.'),
 ]
 class Text(HTMLParser):
  def __init__(self): super().__init__(); self.parts=[]; self.skip=0
@@ -21,18 +24,27 @@ class Text(HTMLParser):
   if not self.skip:self.parts.append(data.strip())
 def plain(value):
  p=Text();p.feed(value);return ' '.join(filter(None,p.parts))
+destination = ROOT/'public/artifacts'
+destination.mkdir(parents=True, exist_ok=True)
+shutil.copy2(SOURCE/'review-and-mock-questions.md', destination/'review-and-mock-questions.md')
+subprocess.run(['node', str(ROOT/'scripts/render-review.mjs')], check=True)
+# Keep the review's linked slide evidence available at its original relative path.
+slide_dir = ROOT/'public/cache/lecture6/slides'
+slide_dir.mkdir(parents=True, exist_ok=True)
+shutil.copy2(ROOT.parent/'cache/lecture6/slides/slide-56.png', slide_dir/'slide-56.png')
 items=[]
 for index,(file,title,kicker,kind,lecture,description) in enumerate(ORDER):
- src=SOURCE/file; html=src.read_text()
+ src=(destination if file == 'review-and-mock-questions.html' else SOURCE)/file
+ html=src.read_text()
  full=plain(html)
  sections=[]
  for number,m in enumerate(re.finditer(r'<h2([^>]*)>(.*?)</h2>',html,re.S),1):
   id_match=re.search(r'id=[\"\']([^\"\']+)',m[1])
   sections.append({'id':id_match[1] if id_match else f'margin-section-{number}','title':plain(m[2])})
  items.append({'id':file.removesuffix('.html'),'file':file,'title':title,'originalTitle':plain(re.search(r'<h1[^>]*>(.*?)</h1>',html,re.S)[1]),'kicker':kicker,'kind':kind,'lecture':lecture,'description':description,'minutes':math.ceil(len(full.split())/200),'order':index+1,'sections':sections,'searchText':full})
- (ROOT/'public/artifacts').mkdir(parents=True,exist_ok=True)
- shutil.copy2(src,ROOT/'public/artifacts'/file)
+ if src != destination/file:
+  shutil.copy2(src,destination/file)
 for n in [2,3,4,5,6]:shutil.copy2(ROOT.parent/f'Lecture{n}.pdf',ROOT/'public'/f'Lecture{n}.pdf')
 (ROOT/'src/data').mkdir(parents=True,exist_ok=True)
 (ROOT/'src/data/artifacts.json').write_text(json.dumps(items,indent=2,ensure_ascii=False)+'\n')
-print(f'Imported {len(items)} original artifacts and 5 source slide decks.')
+print(f'Imported {len(items)} study pages, the original review Markdown, and 5 source slide decks.')

@@ -1,6 +1,6 @@
 # Margin
 
-A small personal reading room for sharing four Efficient AI artifacts. The original essays, diagrams, labs, exam checks, and reference caveats remain intact.
+A small personal reading room for sharing seven Efficient AI study pages, including the Lecture 6 review and worked practice problems. The original essays, diagrams, labs, exam checks, and reference caveats remain intact.
 
 ## Run locally
 
@@ -23,6 +23,8 @@ Vite uses `/margin/` for GitHub Pages. Reader URLs use a hash route (`#/read/neu
 ## Content and publishing
 
 `src/data/artifacts.json` defines the shelf metadata and reading order. `public/artifacts/` contains source HTML, alongside the hosted lecture PDFs in `public/`. `scripts/import-artifacts.py` imports the original source collection. The build adds a small Library navigation strip and mobile matrix fixes to `dist/artifacts/` only; original source files remain untouched. The in-app reader preserves all original scripts and loads the same source in a same-origin frame that grows to the full article height.
+
+Run `python3 scripts/import-artifacts.py` after updating the neighboring `philosopher-output` collection. The importer also preserves the review Markdown and renders its readable HTML edition with `scripts/render-review.mjs` (requires installed npm dependencies). The two pruning supplements keep their source files intact; distribution links open the HTML question bank. All seven pages are searchable and have reader and standalone URLs.
 
 Bookmarks and the last opened note are stored in the current browser. Sharing copies the actual note or section URL; a keyboard-accessible dialog provides a manual-copy fallback. No accounts or server are required.
 

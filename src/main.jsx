@@ -417,7 +417,7 @@ function App() {
                 </span>
               </a>
               <div className="hero-meta">
-                <span>04 artifacts</span>
+                <span>{String(artifacts.length).padStart(2, "0")} artifacts</span>
                 <span>Lectures 02–06</span>
                 <span>Made for the curious</span>
               </div>
@@ -431,7 +431,7 @@ function App() {
                 <h2>Ideas to spend time with.</h2>
               </div>
               <span className="collection-count">
-                {filtered.length.toString().padStart(2, "0")} / 04
+                {filtered.length.toString().padStart(2, "0")} / {String(artifacts.length).padStart(2, "0")}
               </span>
             </div>
             <div className="tools">
