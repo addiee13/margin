@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Counting What Makes a Network Expensive</title><style>:root{--ink:#1d1c1b;--mut:#6c6863;--line:#e6e3de;--hl:#fde7c4;--ac:#5b4fc7;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--serif:Charter,Georgia,serif}*{box-sizing:border-box}body{margin:0;background:#f6f6f5;color:var(--ink);font:17px/1.85 var(--serif)}.sheet{max-width:56rem;margin:0 auto;background:#fff;padding:3.5rem 1.25rem 4rem}.col{max-width:34rem;margin:0 auto}header{text-align:center}.eyebrow,.cap,figcaption,th,.node,.src,.kg h4{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}.eyebrow{font-size:.62rem;color:var(--mut);text-align:center}h1{font-weight:400;font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.12;margin:1rem 0 1.4rem}.deck{color:var(--mut);font-size:.95rem;line-height:1.9;margin:0 auto 1.3rem}.orig{font:.7rem var(--mono);text-decoration:none;border-bottom:1px solid var(--line)}hr{border:0;border-top:1px solid var(--mut);width:1.2rem;margin:3rem auto}h2{font-size:1rem;margin:3.2rem 0 1rem}h3{font-size:.95rem;font-style:italic;margin:2rem 0 .6rem}p,li,dd{font-size:.95rem}p{margin:0 0 1.25rem;text-align:justify;hyphens:auto}mark{background:var(--hl);color:inherit;padding:.1em .2em;-webkit-box-decoration-break:clone;box-decoration-break:clone}a{color:inherit}a.src{font-size:.58rem;color:var(--mut);text-decoration:none;border-bottom:1px dotted var(--mut);white-space:nowrap}.note{font:.78rem/1.6 var(--mono);color:var(--mut);border-left:2px solid var(--line);padding:.2rem .8rem;margin:1.5rem 0}figure{margin:2.5rem 0;text-align:center}figcaption,.cap{font-size:.6rem;line-height:1.5;color:var(--mut);margin-top:.8rem}.flow{display:flex;flex-wrap:wrap;justify-content:center;gap:1.8rem 1.6rem;margin:1rem 0}.node{position:relative;border:1px solid #cfcaf0;background:#f3f2fc;border-radius:8px;padding:.6rem .75rem;font-size:.62rem;line-height:1.4;min-width:6.5rem}.node small{display:block;color:var(--mut);font-size:.55rem}.node.in{border-color:#f0c9a0;background:#fdf1e3}.node.fz{border-color:#d9d6d1;background:#faf9f8}.node:not(:last-child):after{content:"\2192";position:absolute;right:-1.25rem;top:50%;transform:translateY(-50%);color:var(--ac);font-size:.9rem}table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.5rem 0}th,td{padding:.5rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:.58rem;color:var(--mut)}.kg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.5rem 0}.kg>div{display:flex;flex-direction:column;gap:.5rem;position:relative}.kg>div+div:before{content:"\2192";position:absolute;left:-1.2rem;top:50%;color:var(--ac)}.kg h4{margin:0;font-size:.58rem;color:var(--mut);text-align:center}.kg a{border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;font-size:.8rem;text-align:center;text-decoration:none}.kg .me{border-color:var(--ac);background:#f3f2fc}code{font-family:var(--mono);font-size:.85em}.refs{list-style:none;counter-reset:r;padding:0;margin:1.5rem 0}.refs li{counter-increment:r;position:relative;padding:1rem 0 1rem 2.2rem;border-top:1px solid var(--line)}.refs li:before{content:counter(r) ".";position:absolute;left:0;top:1.2rem;font:.6rem var(--mono);color:var(--mut)}.refs a.t{font-weight:700;font-size:.9rem;text-decoration:none}.refs .d{display:block;font-size:.75rem;line-height:1.6;color:var(--mut)}footer{text-align:center;font:.6rem var(--mono);color:var(--mut);margin-top:3rem}@media(max-width:560px){.kg{grid-template-columns:1fr}.kg>div+div:before{content:"\2193";left:50%;top:-1.3rem}}@media(max-width:820px){.flow{flex-direction:column;align-items:center}.node:not(:last-child):after{content:"\2193";right:auto;left:50%;top:auto;bottom:-1.4rem;transform:translateX(-50%)}}
+/* bar chart */
+.bar{display:grid;grid-template-columns:7rem 1fr 3.5rem;gap:.6rem;align-items:center;font-size:.62rem;margin:.4rem 0}.bar i{height:.55rem;border-radius:2px;background:linear-gradient(90deg,var(--ac) var(--v),#eee 0)}@media(max-width:560px){.bar{grid-template-columns:5rem 1fr 2.6rem}}
+/* formula */
+.eq{text-align:center;font-size:1.05rem;margin:1.5rem 0}
+@media print{body{background:#fff}.sheet{padding:0}.orig{display:none}}</style></head>
+<body><div class="sheet"><div class="col">
+
+<header>
+  <div class="eyebrow">Efficient AI · Lecture 3 · Technology and engineering · Undergrad · Deep</div>
+  <h1 id="top">Counting What Makes a Network Expensive</h1>
+  <p class="deck">Most people count parameters and assume that is the cost of a network. Lecture 3 shows that the number that usually bites is memory for activations, and that speed and throughput are different measures. It then builds the convolution layer that produces both.</p>
+  <a class="orig" href="../Lecture3.pdf">Read the original slides ↗</a>
+</header>
+<hr>
+
+<p class="note">The arXiv link below was not retrieved in this session, and the publisher links are top-level pages. Check them before relying on them. Every claim tagged with a slide number comes from the lecture slides, and the figure readings were taken from the PNG renders.</p>
+
+<h2>Parameters are not the memory bill</h2>
+<p>A network's parameter count is the number of weights and biases it stores. The lecture's first efficiency claim is that this number is not what limits inference. The slides say that #Activations, not #Parameters, is the memory bottleneck in CNN inference, and the same holds in training. <a class="src" href="#r1">[Lecture3, slides 44, 46]</a></p>
+<p><mark>Weights sit in storage once. Activations are rebuilt for every input, and a single layer's activations must fit in memory at the same time.</mark></p>
+<p>The rest of this page follows that idea. It counts parameters, counts activations, and then shows what happens when the memory limit is a microcontroller's 256 kB. <a class="src" href="#r3">[slide 45]</a></p>
+
+<h2 id="s4">Latency and throughput answer different questions</h2>
+<p>The slides define latency as the delay for one specific task, and throughput as the rate at which data is processed. <a class="src" href="#r1">[slides 32–33]</a> They then compare two designs for the same workload, four images at 100 ms each. Design 1 processes one image at a time, and Design 2 runs four in parallel. <a class="src" href="#r1">[slide 34]</a></p>
+<table>
+  <tr><th>Design</th><th>Images in parallel</th><th>Latency</th><th>Throughput</th></tr>
+  <tr><td>Design 1</td><td>1</td><td>50 ms</td><td>20 images/s</td></tr>
+  <tr><td>Design 2</td><td>4</td><td>100 ms</td><td>40 images/s</td></tr>
+</table>
+<p>The two measures matter for different products. A camera app that must answer one frame quickly cares about latency. A job that labels a large batch of photos overnight cares about throughput. The slide's example is designed to show that the two can move in opposite directions, so a design chosen for one may be wrong for the other. This paragraph is general reasoning, not a result from the slides.</p>
+<p>Design 2 doubles throughput while making each image wait twice as long. Higher throughput does not mean lower latency here. The slide asks both questions, "does higher throughput translate to lower latency?" and "does lower latency translate to higher throughput?", and the answer depends on the design. <a class="src" href="#r1">[slide 34]</a> A model that is fast for one input can still be slow overall, and the reverse is also true.</p>
+
+<h2 id="s2">Counting parameters means counting weight tensors</h2>
+<p>Every layer stores a weight tensor. For a convolution the slides write its shape as <code>W : (c<sub>o</sub>, c<sub>i</sub>, k, k)</code>, one k×k kernel for each pair of output and input channels. <a class="src" href="#r1">[slide 17]</a> The same counting rule gives the parameter count for each layer type. <a class="src" href="#r1">[slides 38–40]</a></p>
+<table>
+  <tr><th>Layer</th><th>#Parameters</th></tr>
+  <tr><td>Linear</td><td>c<sub>o</sub> · c<sub>i</sub></td></tr>
+  <tr><td>Convolution</td><td>c<sub>o</sub> · c<sub>i</sub> · k<sub>h</sub> · k<sub>w</sub></td></tr>
+  <tr><td>Grouped convolution</td><td>c<sub>o</sub> · c<sub>i</sub> · k<sub>h</sub> · k<sub>w</sub> / g</td></tr>
+  <tr><td>Depthwise convolution</td><td>c<sub>o</sub> · k<sub>h</sub> · k<sub>w</sub></td></tr>
+</table>
+<p>AlexNet, the slides' worked example, has about 61 million parameters in total, with bias ignored. <a class="src" href="#r2">[slide 48]</a> The three linear layers hold most of them. The 4096 × 9216 layer alone has 37.7 million weights. The three together hold about 58.6 million of the 61 million, or 96%. The convolution layers are small by comparison.</p>
+
+<figure>
+<div class="bar"><span>Linear 1 (4096 × 256·6·6)</span><i style="--v:100%"></i><b>37.7M</b></div>
+<div class="bar"><span>Linear 2 (4096 × 4096)</span><i style="--v:45%"></i><b>16.8M</b></div>
+<div class="bar"><span>Linear 3 (1000 × 4096)</span><i style="--v:11%"></i><b>4.1M</b></div>
+<div class="bar"><span>All other layers</span><i style="--v:6%"></i><b>~2.4M</b></div>
+<figcaption>AlexNet parameters by layer group, from slide 48. The last row is the 61M total minus the three linear layers, so it is approximate because the slide rounds the total.</figcaption></figure>
+
+<p>The formulas also show how design choices move the count. In every row the output channel count c<sub>o</sub> is a multiplier, so doubling it doubles the parameters of that layer. Grouping by g divides the count by g relative to a dense convolution with the same channels. These are direct readings of the table, not measured results. <a class="src" href="#r1">[slides 38–40]</a></p>
+<p>Because the parameter count is dominated by linear layers, it says little about the memory a convolutional network needs while it runs. That is the lecture's reason for counting activations separately.</p>
+
+<h2 id="s3">Counting activations means counting what must be held at once</h2>
+<p>An activation is the output a layer produces for one input. For AlexNet the slides count 150,528 values in the input image (3 × 224 × 224), 290,400 in the first convolution's output (96 × 55 × 55), and 932,264 in total across all layers. <a class="src" href="#r2">[slide 49]</a> The peak is roughly the input plus the output of the largest step: 150,528 + 290,400 = 440,928 values. <a class="src" href="#r2">[slide 49]</a></p>
+<p>A flow diagram makes the difference clear. Weights are read from storage, activations are created and destroyed for each input, and the peak has to fit the device.</p>
+
+<figure><div class="flow">
+  <div class="node in">One layer<small>input and weights</small></div>
+  <div class="node fz">Weights<small>#Parameters, stored once</small></div>
+  <div class="node">Activations<small>#Activations, per input</small></div>
+  <div class="node">Peak memory<small>input + output of the step</small></div>
+  <div class="node fz">Device limit<small>RAM on the chip</small></div>
+</div>
+<figcaption>Weights are fixed. Activations are the working memory. The peak has to fit under the limit.</figcaption></figure>
+
+<p>The arithmetic makes the point. The first AlexNet convolution's output, 290,400 values, is about 1.9 times the input image's 150,528 values. That layer has far fewer parameters than the first linear layer, which holds 37.7 million. Memory cost follows the shape of the feature map, which depends on the spatial size and channel count, rather than the parameter count. <a class="src" href="#r2">[slides 48, 49]</a></p>
+
+<h2 id="s5">On a microcontroller, the peak layer decides everything</h2>
+<p>The MCUNet work on IoT devices shows where memory actually goes. For MobileNetV2 the slides plot memory per block. Block 2 peaks at 1,372 kB, while the microcontroller limit is 256 kB. <a class="src" href="#r3">[slide 45]</a> However few parameters the model has, a 256 kB device cannot hold that block's peak memory.</p>
+<figure>
+<div class="bar"><span>Peak, block 2</span><i style="--v:100%"></i><b>1,372 kB</b></div>
+<div class="bar"><span>MCU limit</span><i style="--v:19%"></i><b>256 kB</b></div>
+<figcaption>MobileNetV2 peak block memory against the microcontroller constraint, from slide 45. The MCU limit is about 19% of the peak.</figcaption></figure>
+<p>The per-layer view in MCUNet shows the pattern more fully. Early layers have high activation memory, late layers have high weight memory, and the middle layers have low memory cost in both. <a class="src" href="#r3">[slide 47]</a> A design that balances the two is what makes a network fit.</p>
+
+<h2 id="s6">Convolution is where both numbers come from</h2>
+<p>A convolution slides a small kernel over the input and computes a weighted sum at each position. <a class="src" href="#r1">[slide 14]</a> That is the weighted-sum neuron from Lecture 2, repeated across space. Slide 14 shows one photo filtered by four different 3×3 kernels, edge detection, blur, and sharpen among them, giving four different features. Each kernel is a small set of weights, so one convolution layer holds many filters, and each filter produces one output channel. <a class="src" href="#r1">[slides 14, 17]</a></p>
+<p>Stride controls how many positions the kernel visits. On a 5×5 grid, stride 1 visits 25 positions, while stride 2 visits 9. <a class="src" href="#r1">[slide 22]</a> A 1D convolution slides along one dimension, such as time, and a 2D convolution slides along height and width. <a class="src" href="#r1">[slide 12]</a> Grouped and depthwise convolutions reduce the parameter count, by dividing by g or dropping the input-channel factor. The table above shows both. <a class="src" href="#r1">[slides 23–24]</a> Pooling shrinks a 4×4 map to 2×2. <a class="src" href="#r1">[slide 25]</a> Most common activation functions have no learnable parameters. <a class="src" href="#r1">[slide 27]</a></p>
+
+<h2>Which number is the bottleneck?</h2>
+<p>Before optimizing, ask which resource is short. If the model must fit in storage, the weight count is the question, and the linear layers of AlexNet are where to look. If the model must fit in RAM, the question is the peak activation step, as in the MobileNetV2 figure. If the model must answer quickly, the question is latency for one input, and if it must process a large queue, the question is throughput. The same network can be fine on one of these and fail on another. This checklist is a reading of the lecture's framing, not a method the slides state in one place.</p>
+
+<h2>How the ideas connect</h2>
+<div class="kg">
+  <div><h4>Needs first</h4><a href="#s6">Weighted sum</a><a href="#s6">Convolution kernel</a></div>
+  <div><h4>This topic</h4><a class="me" href="#top">Efficiency of neural networks</a><a href="#s2">#Parameters</a><a href="#s3">#Activations</a><a href="#s4">Latency</a><a href="#s4">Throughput</a><a href="#s2">Model size</a></div>
+  <div><h4>Leads to</h4><a href="#s5">Tiny deep learning on MCUs</a></div>
+</div>
+<table>
+  <tr><th>From</th><th>Relation</th><th>To</th></tr>
+  <tr><td>Convolution</td><td>requires</td><td>Weighted sum</td></tr>
+  <tr><td>#Parameters</td><td>part-of</td><td>Efficiency of neural networks</td></tr>
+  <tr><td>#Activations</td><td>part-of</td><td>Efficiency of neural networks</td></tr>
+  <tr><td>Latency</td><td>part-of</td><td>Efficiency of neural networks</td></tr>
+  <tr><td>Throughput</td><td>part-of</td><td>Efficiency of neural networks</td></tr>
+  <tr><td>Model size</td><td>part-of</td><td>Efficiency of neural networks</td></tr>
+  <tr><td>Latency</td><td>contrasts-with</td><td>Throughput</td></tr>
+  <tr><td>#Activations</td><td>contrasts-with</td><td>#Parameters</td></tr>
+  <tr><td>#Activations</td><td>applied-in</td><td>Tiny deep learning on MCUs</td></tr>
+</table>
+
+<h2>What this does not show</h2>
+<p>The text layer for slides 30 to 43 is mostly titles, so the energy consumption and model size slides (36 and 42) were not read in detail and no numbers are given for them here. The slides give no accuracy figures for any of the networks, so the trade-offs above are about cost, not quality. The latency and throughput example is a teaching case with four images and fixed times, not a measurement. The MCU figures come from one paper and one device limit.</p>
+
+<h2>Go deeper</h2>
+<p>Start with the Lecture 2 page for the hardware and quantization side of the same argument. <a class="src" href="#r4">[Lecture 2 page]</a> Then return to the slides in order: the counting rules at slides 38 to 40, the AlexNet worked example at 48 and 49, and the MCU figures at 45 and 47. The original AlexNet and MCUNet papers are the next step after those.</p>
+
+<h2>References</h2>
+<ol class="refs">
+  <li id="r1"><a class="t" href="../Lecture3.pdf">Lecture 3, Efficient AI (local slides)</a><span class="d">Instructor's course slides, cited by slide number. Slide 1 credits materials drawn from Prof. Song Han's MIT course.</span></li>
+  <li id="r2"><a class="t" href="https://papers.nips.cc/">Krizhevsky et al., ImageNet Classification with Deep Convolutional Neural Networks, NeurIPS 2012</a><span class="d">AlexNet. Named on slides 48 and 49 as the source of the parameter and activation counts. Top-level publisher page; not retrieved in this session.</span></li>
+  <li id="r3"><a class="t" href="https://arxiv.org/abs/2007.10319">Lin et al., MCUNet: Tiny Deep Learning on IoT Devices, NeurIPS 2020</a><span class="d">Named on slides 45 and 47 as the source of the MobileNetV2 and per-layer memory figures. Not retrieved in this session.</span></li>
+  <li id="r4"><a class="t" href="lecture2-efficient-ai.html">Lecture 2 study page (generated)</a><span class="d">Companion page on quantization, pruning and hardware, built from the Lecture 2 slides.</span></li>
+</ol>
+<footer>Generated by phil-OKF · Slide material: Prof. Haoxin Wang's Efficient AI course, which draws on Prof. Song Han's MIT course</footer>
+</div></div></body></html>

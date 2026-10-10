@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Network Building Blocks</title><style>:root{--ink:#1d1c1b;--mut:#6c6863;--line:#e6e3de;--hl:#fde7c4;--ac:#5b4fc7;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--serif:Charter,Georgia,serif}*{box-sizing:border-box}body{margin:0;background:#f6f6f5;color:var(--ink);font:17px/1.85 var(--serif)}.sheet{max-width:56rem;margin:0 auto;background:#fff;padding:3.5rem 1.25rem 4rem}.col{max-width:34rem;margin:0 auto}header{text-align:center}.eyebrow,.cap,figcaption,th,.node,.src,.kg h4{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}.eyebrow{font-size:.62rem;color:var(--mut);text-align:center}h1{font-weight:400;font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.12;margin:1rem 0 1.4rem}.deck{color:var(--mut);font-size:.95rem;line-height:1.9;margin:0 auto 1.3rem}.orig{font:.7rem var(--mono);text-decoration:none;border-bottom:1px solid var(--line)}hr{border:0;border-top:1px solid var(--mut);width:1.2rem;margin:3rem auto}h2{font-size:1rem;margin:3.2rem 0 1rem}h3{font-size:.95rem;font-style:italic;margin:2rem 0 .6rem}p,li,dd{font-size:.95rem}p{margin:0 0 1.25rem;text-align:justify;hyphens:auto}mark{background:var(--hl);color:inherit;padding:.1em .2em;-webkit-box-decoration-break:clone;box-decoration-break:clone}a{color:inherit}a.src{font-size:.58rem;color:var(--mut);text-decoration:none;border-bottom:1px dotted var(--mut);white-space:nowrap}.note{font:.78rem/1.6 var(--mono);color:var(--mut);border-left:2px solid var(--line);padding:.2rem .8rem;margin:1.5rem 0}figure{margin:2.5rem 0;text-align:center}figcaption,.cap{font-size:.6rem;line-height:1.5;color:var(--mut);margin-top:.8rem}.flow{display:flex;flex-wrap:wrap;justify-content:center;gap:1.8rem 1.6rem;margin:1rem 0}.node{position:relative;border:1px solid #cfcaf0;background:#f3f2fc;border-radius:8px;padding:.6rem .75rem;font-size:.62rem;line-height:1.4;min-width:6.5rem}.node small{display:block;color:var(--mut);font-size:.55rem}.node.in{border-color:#f0c9a0;background:#fdf1e3}.node.fz{border-color:#d9d6d1;background:#faf9f8}.node:not(:last-child):after{content:"\2192";position:absolute;right:-1.25rem;top:50%;transform:translateY(-50%);color:var(--ac);font-size:.9rem}table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.5rem 0}th,td{padding:.5rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:.58rem;color:var(--mut)}.kg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.5rem 0}.kg>div{display:flex;flex-direction:column;gap:.5rem;position:relative}.kg>div+div:before{content:"\2192";position:absolute;left:-1.2rem;top:50%;color:var(--ac)}.kg h4{margin:0;font-size:.58rem;color:var(--mut);text-align:center}.kg a{border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;font-size:.8rem;text-align:center;text-decoration:none}.kg .me{border-color:var(--ac);background:#f3f2fc}code{font-family:var(--mono);font-size:.85em}.refs{list-style:none;counter-reset:r;padding:0;margin:1.5rem 0}.refs li{counter-increment:r;position:relative;padding:1rem 0 1rem 2.2rem;border-top:1px solid var(--line)}.refs li:before{content:counter(r) ".";position:absolute;left:0;top:1.2rem;font:.6rem var(--mono);color:var(--mut)}.refs a.t{font-weight:700;font-size:.9rem;text-decoration:none}.refs .d{display:block;font-size:.75rem;line-height:1.6;color:var(--mut)}footer{text-align:center;font:.6rem var(--mono);color:var(--mut);margin-top:3rem}@media(max-width:560px){.kg{grid-template-columns:1fr}.kg>div+div:before{content:"\2193";left:50%;top:-1.3rem}}@media(max-width:820px){.flow{flex-direction:column;align-items:center}.node:not(:last-child):after{content:"\2193";right:auto;left:50%;top:auto;bottom:-1.4rem;transform:translateX(-50%)}}
+.bar{display:grid;grid-template-columns:7rem 1fr 2.5rem;gap:.6rem;align-items:center;font-size:.62rem;margin:.4rem 0}.bar i{height:.55rem;border-radius:2px;background:linear-gradient(90deg,var(--ac) var(--v),#eee 0)}@media(max-width:560px){.bar{grid-template-columns:5rem 1fr 2rem}}
+.eq{text-align:center;font-size:1.05rem;margin:1.5rem 0}
+details{border-top:1px solid var(--line);padding:.7rem 0}summary{cursor:pointer;font-size:.62rem}
+@media print{body{background:#fff}.sheet{padding:0}.orig{display:none}}@media(min-width:900px){figure>.flow{margin-left:-10rem;margin-right:-10rem}}
+.lab{border:1px solid var(--line);border-radius:8px;padding:1rem 1rem .6rem;margin:2rem 0;background:#fcfcfb}.lab .cap{text-align:left;margin:0 0 .7rem;color:var(--ac)}.btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .9rem}.btns button{font:.6rem var(--mono);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:5px;padding:.45rem .6rem;cursor:pointer}.btns button.on{border-color:var(--ac);background:#f3f2fc;color:var(--ac)}.mx{display:inline-grid;gap:3px;font:.7rem var(--mono)}.mx span{width:2.6rem;height:1.9rem;display:flex;align-items:center;justify-content:center;border-radius:3px;background:#5b4fc7;color:#fff;transition:all .25s}.mx span.p{background:#fff;color:#c9c5bf;border:1px dashed #d9d6d1;text-decoration:line-through}.mx span.z{background:#fde7c4;color:var(--ink)}.mx span.nz{background:#fff;color:var(--mut);border:1px solid var(--line)}.mx.sm span{width:2.1rem;height:1.6rem;font-size:.62rem}.stat{font:.68rem/1.7 var(--mono);color:var(--mut);margin:.8rem 0 .3rem}.stat b{color:var(--ink)}.row2{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:flex-start;justify-content:center}.row2>div{text-align:center}.row2 .cap{text-align:center;color:var(--mut)}input.w{width:3.2rem;font:.75rem var(--mono);text-align:center;padding:.3rem;border:1px solid var(--line);border-radius:4px}input[type=range]{width:100%;accent-color:#5b4fc7}.predict{border-left:2px solid #f0c9a0;background:#fdf8f0;padding:.6rem .9rem;margin:1.5rem 0;font-size:.9rem}.predict b{font:.6rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:#b4782f;display:block}details p{margin:.6rem 0 .4rem}summary{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ac)}.big{font-size:1.4rem;font-weight:700;color:var(--ac)}.chip{display:inline-block;font:.58rem var(--mono);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:.1rem .5rem;margin-left:.3rem;color:var(--mut);vertical-align:middle}.qz li{margin-bottom:.4rem}
+</style></head>
+<body><div class="sheet"><div class="col">
+
+<header id="top">
+  <div class="eyebrow">Technology · Efficient AI · CSC 4814/6814 · Lectures 2–3</div>
+  <h1>Inside a Neural Network: Layers, Channels, and What They Cost</h1>
+  <p class="deck">A neural network is a stack of a few repeating building blocks: fully-connected layers, convolutions, pooling, normalization and activations. This page explains what each block computes and what its tensors look like. It spends extra time on the idea everything later depends on, the <b>channel</b>. Then it shows how to measure what a network costs in parameters, memory, latency and energy, which is the foundation for pruning and the rest of the course.</p>
+  <a class="orig" href="../Lecture3.pdf">Open the lecture slides ↗</a>
+</header>
+<hr>
+
+<figure><div class="flow">
+  <div class="node in">Image<small>3 channels (RGB)</small></div>
+  <div class="node">Conv + ReLU<small>filters → feature maps</small></div>
+  <div class="node">Pooling<small>shrink height × width</small></div>
+  <div class="node">Fully-connected<small>features → scores</small></div>
+  <div class="node fz">Output<small>1000 classes</small></div>
+</div>
+<figcaption>The path of one image through a typical CNN</figcaption></figure>
+
+<div class="predict"><b>Predict first</b>AlexNet has about 61 million parameters, and most of its layers are convolutions. Do you think most of the 61M parameters live in the conv layers or the fully-connected layers? And which kind of layer produces the most <i>activations</i>? The answers are in section 7.</div>
+
+<h2 id="s1">1 · Efficiency matters because models outgrew their hardware</h2>
+<p>Deep learning is everywhere: vision, language, code generation, multimodal models and robots. Large language models even show emergent behaviors such as few-shot learning and chain-of-thought reasoning, but at the cost of enormous model size. The course goal is <i>doing more with less: making AI fast, small and everywhere.</i> <a class="src" href="#r1">[L2, motivation]</a></p>
+<p>The numbers show why. AWQ, a quantization method, speeds LLaMA-2-7B from 50 to 166 tokens/s on an RTX 4090, about 3.3× <a class="src" href="#r10">[AWQ, §5]</a>. A robotics transformer runs at only 3 Hz because of its compute cost and network latency. Running models on the edge (phones, laptops, cars, robots) also keeps personal data private and works without internet. Edge hardware such as the Qualcomm Hexagon DSP, the Apple Neural Engine, NVIDIA Jetson and microcontrollers still has a huge gap to cloud processors. <mark>Efficiency rests on three pillars: algorithms, systems and hardware, each of which must support tricks like pruning and quantization.</mark> <a class="src" href="#r1">[L2, Three pillars]</a></p>
+
+<h2 id="s2">2 · The vocabulary: synapses carry weights, neurons carry activations</h2>
+<p>In the slides' 3-layer network (2 hidden layers), each connection is a <b>synapse</b>, also called a weight or parameter. Each circle is a <b>neuron</b>, also called a feature or activation. A neuron takes inputs <i>x<sub>i</sub></i>, multiplies each by its weight <i>w<sub>i</sub></i>, adds a bias <i>b</i>, and passes the sum through an activation function <i>f</i>: <a class="src" href="#r1">[L3, Recap DNN]</a></p>
+<p class="eq">y = f( Σ<sub>i</sub> w<sub>i</sub>x<sub>i</sub> + b )</p>
+<table><tr><th>Word</th><th>Same thing as</th><th>Is it learned?</th></tr>
+<tr><td>Synapse</td><td>weight, parameter</td><td>Yes, stored in the model file</td></tr>
+<tr><td>Neuron</td><td>feature, activation</td><td>No, computed fresh for every input</td></tr>
+<tr><td>Width</td><td>size of the hidden layers</td><td>A design choice</td></tr>
+</table>
+<p>Keep this split in mind: <b>weights</b> are what the model <i>is</i>, and <b>activations</b> are what it <i>produces</i> while running. Section 7 shows that these two cost memory in very different ways.</p>
+
+<h2 id="s3">3 · A fully-connected layer is one matrix multiply</h2>
+<p>Every output neuron connects to every input neuron. The slides' intuition: think of <i>x</i> as 5 features of a person (height, weight, age…). To score "fits a basketball team," you weight each feature by how much it matters, add them up, and shift by a bias: <a class="src" href="#r1">[L2–3, One neuron]</a></p>
+<p class="eq">y<sub>0</sub> = w<sub>00</sub>x<sub>0</sub> + w<sub>01</sub>x<sub>1</sub> + w<sub>02</sub>x<sub>2</sub> + w<sub>03</sub>x<sub>3</sub> + w<sub>04</sub>x<sub>4</sub> + b<sub>0</sub> &nbsp;→&nbsp; y<sub>i</sub> = Σ<sub>j</sub> w<sub>ij</sub>x<sub>j</sub> + b<sub>i</sub></p>
+<p>Stack all the output neurons and the whole layer collapses into <mark>Y = XW<sup>T</sup> + b: one matrix multiply, plus a bias.</mark></p>
+<table><tr><th>Tensor</th><th>Shape</th><th>Meaning</th></tr>
+<tr><td>Input X</td><td>(n, c<sub>i</sub>)</td><td>n samples in the batch, c<sub>i</sub> input channels (features)</td></tr>
+<tr><td>Output Y</td><td>(n, c<sub>o</sub>)</td><td>c<sub>o</sub> output channels</td></tr>
+<tr><td>Weights W</td><td>(c<sub>o</sub>, c<sub>i</sub>)</td><td>one row per output neuron</td></tr>
+<tr><td>Bias b</td><td>(c<sub>o</sub>,)</td><td>one per output neuron</td></tr>
+</table>
+<p>Notice the word <i>channels</i> already: in a linear layer, a "channel" is simply one feature. For a single sample, the shapes are (1, c<sub>i</sub>) and (1, c<sub>o</sub>). Stacking two such layers gives a <b>multilayer perceptron</b> (MLP). Each output neuron does c<sub>i</sub> multiply-accumulates (MACs), so the layer does <b>c<sub>i</sub>·c<sub>o</sub> MACs</b>. <a class="src" href="#r1">[L4, #MACs]</a></p>
+
+<h2 id="s4">4 · A channel is one "view" of the input, and every filter makes one</h2>
+
+<p>Here is the idea that the pruning lectures assume you know. Start with a color photo. It is not one grid of numbers but <b>three</b>: a red grid, a green grid and a blue grid stacked on top of each other. Each of those grids is a <b>channel</b>. An RGB image has c<sub>i</sub> = 3 channels, each h × w pixels. <a class="src" href="#r1">[L3, 2D conv, RGB split]</a></p>
+
+<p>A convolution slides a small <b>kernel</b> (for example 3×3) over the image and computes a weighted sum at every location. <mark>The kernel decides what you see.</mark> The same photo with four different 3×3 kernels gives four different results: <a class="src" href="#r1">[L3, The kernel decides]</a></p>
+
+<div class="lab" id="labK">
+  <div class="cap">Lab 1 · Slide a 3×3 kernel over a 6×6 image</div>
+  <div class="btns" data-g>
+    <button class="on" data-m="id">Identity</button>
+    <button data-m="edge">Edge detect</button>
+    <button data-m="blur">Blur</button>
+    <button data-m="sharp">Sharpen</button>
+  </div>
+  <div class="row2">
+    <div><div class="cap">Input (1 channel)</div><div class="mx sm" id="k-in" style="grid-template-columns:repeat(6,auto)"></div></div>
+    <div><div class="cap">Kernel</div><div class="mx sm" id="k-k" style="grid-template-columns:repeat(3,auto)"></div></div>
+    <div><div class="cap">Output feature map</div><div class="mx sm" id="k-out" style="grid-template-columns:repeat(4,auto)"></div></div>
+  </div>
+  <div class="stat" id="k-stat"></div>
+</div>
+
+<p>Now the key step. A conv layer does not learn one kernel; it learns <b>many filters</b>, and <i>each filter outputs its own channel</i>. In the slides, a 3-channel cat photo goes through N learned filters and comes out as N output maps. One map highlights edges, another fur texture, another outlines. Those output maps are the layer's <b>output channels</b>, also called <b>feature maps</b>. <a class="src" href="#r1">[L3, One filter, one feature map]</a></p>
+
+<figure><div class="flow">
+  <div class="node in">Input<small>c<sub>i</sub> channels, h<sub>i</sub>×w<sub>i</sub></small></div>
+  <div class="node">c<sub>o</sub> filters<small>each c<sub>i</sub>×k<sub>h</sub>×k<sub>w</sub></small></div>
+  <div class="node fz">Output<small>c<sub>o</sub> channels, h<sub>o</sub>×w<sub>o</sub></small></div>
+</div><figcaption>Filter j looks at all c<sub>i</sub> input channels at once and produces output channel j</figcaption></figure>
+
+<p>Since the input has c<sub>i</sub> channels, each filter is really a stack of c<sub>i</sub> kernels, one per input channel. The filter applies each kernel to its channel and <i>adds the results</i> into a single output map. That is why the weight tensor has the shape</p>
+<p class="eq">W : (c<sub>o</sub>, c<sub>i</sub>, k<sub>h</sub>, k<sub>w</sub>)</p>
+<p>with one k×k kernel for every (output channel, input channel) pair. In the slide, c<sub>i</sub> = 3 (RGB) and c<sub>o</sub> = N, the number of learned filters. <a class="src" href="#r1">[L3, Weight tensor shape]</a></p>
+
+<h3 id="channels">Why channels are the natural unit for pruning</h3>
+<p>Deleting output channel <i>j</i> of a layer removes three things at once:</p>
+<ol>
+<li><b>Filter j</b> in this layer: c<sub>i</sub>·k<sub>h</sub>·k<sub>w</sub> weights.</li>
+<li><b>Feature map j</b>: h<sub>o</sub>·w<sub>o</sub> activations that no longer need to be computed or stored.</li>
+<li>The <b>matching slice of every filter in the next layer</b>. That layer's input now has one channel fewer, so each of its filters loses one k×k kernel.</li>
+</ol>
+<p><mark>What is left is an ordinary, smaller dense convolution, so every library and chip runs it faster with no special support.</mark> That is the "direct speedup" in the pruning slides. Fine-grained pruning, by contrast, leaves scattered zeros inside a tensor of the same shape. Try it:</p>
+
+<div class="lab" id="labC">
+  <div class="cap">Lab 2 · Prune channels between two conv layers (56×56 maps, 3×3 kernels)</div>
+  <div class="stat" style="margin-top:0">Layer A: 64 → <b id="c-k">128</b> channels &nbsp;·&nbsp; Layer B: <b id="c-k2">128</b> → 256 channels</div>
+  <input type="range" id="c-r" min="8" max="128" step="8" value="128">
+  <div class="mx" id="c-vis" style="grid-template-columns:repeat(16,auto);margin:.8rem 0;justify-content:center;display:grid"></div>
+  <div id="c-bars"></div>
+  <div class="stat" id="c-sum"></div>
+</div>
+
+<p>Drag the slider to keep 64 of the 128 middle channels. Layer A's weights halve, the feature maps between the layers halve, and Layer B's weights <i>also</i> halve, even though you never touched Layer B's own output. One decision saves memory in two layers. It also explains the pruning lecture's warning that channel pruning has a <i>smaller compression ratio</i>: you can only remove whole channels, never the single weakest weights.</p>
+
+<h2 id="s5">5 · Convolution variants: same idea, different shapes</h2>
+<p>In a conv layer, each output neuron connects only to the input neurons in its <b>receptive field</b>, not to everything. In <b>1D convolution</b> the kernel slides along one dimension, such as time in an ECG signal, and learns temporal patterns. In <b>2D convolution</b> it slides along height and width, such as detecting a stop sign in a street scene, and learns spatial patterns like edges, textures and shapes. <a class="src" href="#r1">[L3, 1D vs 2D]</a></p>
+<table><tr><th>Tensor</th><th>Linear</th><th>1D conv</th><th>2D conv</th></tr>
+<tr><td>Input X</td><td>(n, c<sub>i</sub>)</td><td>(n, c<sub>i</sub>, w<sub>i</sub>)</td><td>(n, c<sub>i</sub>, h<sub>i</sub>, w<sub>i</sub>)</td></tr>
+<tr><td>Output Y</td><td>(n, c<sub>o</sub>)</td><td>(n, c<sub>o</sub>, w<sub>o</sub>)</td><td>(n, c<sub>o</sub>, h<sub>o</sub>, w<sub>o</sub>)</td></tr>
+<tr><td>Weights W</td><td>(c<sub>o</sub>, c<sub>i</sub>)</td><td>(c<sub>o</sub>, c<sub>i</sub>, k<sub>w</sub>)</td><td>(c<sub>o</sub>, c<sub>i</sub>, k<sub>h</sub>, k<sub>w</sub>)</td></tr>
+<tr><td>Bias b</td><td>(c<sub>o</sub>,)</td><td>(c<sub>o</sub>,)</td><td>(c<sub>o</sub>,)</td></tr>
+</table>
+<p class="note">Notation: n batch size · c<sub>i</sub>/c<sub>o</sub> input/output channels · h, w height/width · k<sub>h</sub>, k<sub>w</sub> kernel height/width · g groups.</p>
+
+<p><b>Stride</b> is how far the kernel jumps between positions. On the slide's 7×7 input with a 3×3 kernel, stride 1 visits all 25 positions (a 5×5 output), while stride 2 visits only 9 (a 3×3 output). The slides don't give a general formula, but the standard one, with padding <i>p</i> zeros added around the border, is: <a class="src" href="#r3">[Dumoulin & Visin, §2]</a></p>
+<p class="eq">h<sub>o</sub> = ⌊(h<sub>i</sub> + 2p − k<sub>h</sub>) / s⌋ + 1</p>
+<p>Check it against AlexNet's first layer (224 input, 11×11 kernel, stride 4, pad 2): ⌊(224 + 4 − 11)/4⌋ + 1 = 55. That matches the 96×55×55 output in the slides.</p>
+
+<p><b>Grouped convolution</b> splits the channels into <i>g</i> groups, and each group is a narrower convolution that sees only its own c<sub>i</sub>/g input channels. The weights shrink from (c<sub>o</sub>, c<sub>i</sub>, k<sub>h</sub>, k<sub>w</sub>) to (g·c<sub>o</sub>/g, c<sub>i</sub>/g, k<sub>h</sub>, k<sub>w</sub>), which is <b>g times fewer</b>. <b>Depthwise convolution</b> is the extreme case g = c<sub>i</sub> = c<sub>o</sub>. Every channel gets its own independent filter and channels never mix, so W is just (c, k<sub>h</sub>, k<sub>w</sub>). Efficient mobile networks like MobileNetV2 are built on this. <a class="src" href="#r8">[MobileNetV2, §3.1]</a></p>
+
+<div class="lab" id="labL">
+  <div class="cap">Lab 3 · Conv layer calculator. Try the presets, then your own numbers.</div>
+  <div class="btns" data-g>
+    <button class="on" data-m="a1">AlexNet conv1</button>
+    <button data-m="a2">AlexNet conv2 (g=2)</button>
+    <button data-m="a5">AlexNet conv5 (g=2)</button>
+    <button data-m="dw">Depthwise 3×3</button>
+  </div>
+  <div class="row2" style="font:.62rem var(--mono);color:var(--mut)" id="l-in"></div>
+  <div class="stat" id="l-out"></div>
+</div>
+
+<h2 id="s6">6 · The supporting layers have few or no parameters</h2>
+<p><b>Pooling</b> downsamples a feature map. Each output neuron pools the features in its receptive field, like convolution, and the stride usually equals the kernel size (s = k). Pooling works on <i>each channel independently</i> and has <b>no learnable parameters</b>. <a class="src" href="#r1">[L3, Pooling]</a></p>
+<div class="lab" id="labP">
+  <div class="cap">Lab 4 · 2×2 pooling, stride 2 (the slide's example)</div>
+  <div class="btns" data-g><button class="on" data-m="max">Max pooling</button><button data-m="avg">Average pooling</button></div>
+  <div class="row2">
+    <div><div class="cap">Input 4×4</div><div class="mx" id="p-in" style="grid-template-columns:repeat(4,auto)"></div></div>
+    <div><div class="cap">Output 2×2</div><div class="mx" id="p-out" style="grid-template-columns:repeat(2,auto)"></div></div>
+  </div>
+  <div class="stat" id="p-stat">Hover over an output cell to see the 2×2 window it came from.</div>
+</div>
+
+<p><b>Normalization</b> makes optimization faster. Each feature is shifted and scaled using the mean μ<sub>i</sub> and standard deviation σ<sub>i</sub> over a set of pixels S<sub>i</sub>: <a class="src" href="#r7">[Wu & He, §3.1]</a></p>
+<p class="eq">x̂<sub>i</sub> = (x<sub>i</sub> − μ<sub>i</sub>) / σ<sub>i</sub>, &nbsp; μ<sub>i</sub> = (1/m) Σ<sub>k∈S<sub>i</sub></sub> x<sub>k</sub>, &nbsp; σ<sub>i</sub> = √( (1/m) Σ<sub>k∈S<sub>i</sub></sub> (x<sub>k</sub> − μ<sub>i</sub>)² + ε )</p>
+<p>Then a <i>per-channel</i> linear transform with a trainable scale γ and shift β, y<sub>i</sub> = γ x̂<sub>i</sub> + β, restores the representational ability that normalization might remove. The variants differ only in which set S<sub>i</sub> they average over:</p>
+<table><tr><th>Variant</th><th>Statistics computed over</th></tr>
+<tr><td>Batch Norm</td><td>One channel, across the whole batch and all pixels</td></tr>
+<tr><td>Layer Norm</td><td>One sample, across all channels and pixels</td></tr>
+<tr><td>Instance Norm</td><td>One sample, one channel</td></tr>
+<tr><td>Group Norm</td><td>One sample, one group of channels</td></tr>
+</table>
+<p>Look back at the pruning page: scaling-based pruning reuses exactly this per-channel γ. A channel with a tiny γ is barely let through, so it can be cut.</p>
+
+<p><b>Activation functions</b> are typically non-linear, and <mark>most common activation functions have no learnable parameters.</mark> <a class="src" href="#r1">[L3, Activation]</a></p>
+<table><tr><th>Name</th><th>Formula</th></tr>
+<tr><td>Sigmoid</td><td>y = 1/(1 + e<sup>−x</sup>)</td></tr>
+<tr><td>ReLU</td><td>y = max(0, x)</td></tr>
+<tr><td>ReLU6</td><td>y = min(max(0, x), 6)</td></tr>
+<tr><td>Leaky ReLU</td><td>y = max(αx, x)</td></tr>
+<tr><td>Swish</td><td>y = x/(1 + e<sup>−x</sup>)</td></tr>
+<tr><td>Hard Swish</td><td>0 if x ≤ −3; x if x ≥ 3; x(x + 3)/6 otherwise</td></tr>
+</table>
+<p>Others include Tanh, GELU, ELU and Mish. ReLU's flat zero region is what creates the zeros that APoZ pruning counts.</p>
+
+<p><b>Putting it together.</b> The slides' CNN example (VGG-style) shrinks space while growing channels: 224×224×64 → 112×112×128 → 56×56×256 → 28×28×512 → 14×14×512 → 7×7×512, then fully-connected layers of 4096, 4096 and 1000. Each stage is conv + ReLU, with max pooling between stages. <a class="src" href="#r9">[Simonyan & Zisserman, Table 1]</a></p>
+
+<h2 id="s7">7 · Efficiency has more than one meaning</h2>
+<p>The slides draw a triangle. <b>Storage</b> makes models smaller, <b>latency</b> makes them faster, and <b>energy</b> makes them greener, and both <b>computation</b> and <b>memory</b> sit in the middle and drive all three. The metrics come in two families: <a class="src" href="#r1">[L3, Efficiency metrics]</a></p>
+<table><tr><th>Memory-related</th><th>Computation-related</th></tr>
+<tr><td>#parameters · model size · total / peak #activations</td><td>MAC · FLOP, FLOPS · OP, OPS</td></tr>
+</table>
+
+<h3>Latency and throughput are not the same</h3>
+<p><b>Latency</b> is the delay for one task. For example, SegFormer takes 638 ms per frame (82.4 mIoU), while EfficientViT takes 46 ms (82.7 mIoU). <b>Throughput</b> is the rate at which data is processed, for example 6.1 vs 77.4 videos per second. <a class="src" href="#r1">[L3, Latency, Throughput]</a></p>
+<div class="predict"><b>Puzzle from the slides</b>Design 1 handles one image at a time in 50 ms. Design 2 handles 4 images in parallel, taking 100 ms each. Which has lower latency? Which has higher throughput?</div>
+<details><summary>Answer</summary><p>Design 1 has 50 ms latency and 20 images/s throughput. Design 2 has 100 ms latency but 40 images/s throughput. Higher throughput does <i>not</i> imply lower latency, and lower latency does not imply higher throughput. Parallelism buys throughput; making each job faster buys latency.</p></details>
+
+<p>Latency is roughly set by whichever is slower, computing or moving data:</p>
+<p class="eq">Latency ≈ max(T<sub>computation</sub>, T<sub>memory</sub>)</p>
+<table><tr><th>Term</th><th>≈ NN specification</th><th>÷ hardware specification</th></tr>
+<tr><td>T<sub>computation</sub></td><td>#operations in the model</td><td>#operations the processor does per second</td></tr>
+<tr><td>T<sub>data movement of weights</sub></td><td>model size</td><td>memory bandwidth</td></tr>
+<tr><td>T<sub>data movement of activations</sub></td><td>input + output activation size</td><td>memory bandwidth</td></tr>
+</table>
+<p>where T<sub>memory</sub> ≈ T<sub>activations</sub> + T<sub>weights</sub>. Every term is a model number divided by a hardware number. You can make a model faster by shrinking the top line, which is what pruning does, or by buying a better bottom line.</p>
+
+<h3>Energy: moving data is what costs</h3>
+<p>Rough energy per operation at 45 nm, 0.9 V. Each bar's length is on a log scale: <a class="src" href="#r4">[Horowitz, Fig. 1.1.9]</a></p>
+<div id="e-bars"></div>
+<p><mark>A single DRAM access costs about 200× a 32-bit multiply.</mark> Data movement means more memory references, and that means more energy. This is why the pruning lectures care about removing <i>activations</i>, not just multiplies.</p>
+
+<h3>Counting parameters</h3>
+<p>#Parameters is the number of elements in the weight tensors. Ignoring bias: <a class="src" href="#r1">[L3, #Parameters]</a></p>
+<table><tr><th>Layer</th><th>#Parameters</th></tr>
+<tr><td>Linear</td><td>c<sub>o</sub>·c<sub>i</sub></td></tr>
+<tr><td>Convolution</td><td>c<sub>o</sub>·c<sub>i</sub>·k<sub>h</sub>·k<sub>w</sub></td></tr>
+<tr><td>Grouped convolution</td><td>(c<sub>o</sub>/g)·(c<sub>i</sub>/g)·k<sub>h</sub>·k<sub>w</sub>·g = c<sub>o</sub>·c<sub>i</sub>·k<sub>h</sub>·k<sub>w</sub>/g</td></tr>
+<tr><td>Depthwise convolution</td><td>c<sub>o</sub>·k<sub>h</sub>·k<sub>w</sub></td></tr>
+</table>
+<p><b>Model size</b> is the storage for the weights. When the whole network uses one data type, model size = #parameters × bit width. For AlexNet's 61M parameters, 32-bit floats take 61M × 4 bytes ≈ 244 MB, and 8-bit integers take 61M × 1 byte = 61 MB. That 4× saving is the promise of quantization.</p>
+
+<h3>AlexNet, counted by hand</h3>
+<p>Here is the predict-first answer. Work down the table; the one "?" is yours to fill in: <a class="src" href="#r2">[Krizhevsky et al., Fig. 2]</a></p>
+<table><tr><th>Layer</th><th>Output C×H×W</th><th>#Parameters</th><th>#Activations</th></tr>
+<tr><td>Image</td><td>3×224×224</td><td>–</td><td>150,528</td></tr>
+<tr><td>11×11 conv, 96, s4, p2</td><td>96×55×55</td><td>96·3·11·11 = 34,848</td><td>290,400</td></tr>
+<tr><td>3×3 maxpool, s2</td><td>96×27×27</td><td>0</td><td>69,984</td></tr>
+<tr><td>5×5 conv, 256, p2, g2</td><td>256×27×27</td><td>256·96·5·5/2 = 307,200</td><td>186,624</td></tr>
+<tr><td>3×3 maxpool, s2</td><td>256×13×13</td><td>0</td><td>43,264</td></tr>
+<tr><td>3×3 conv, 384, p1</td><td>384×13×13</td><td>384·256·3·3 = 884,736</td><td>64,896</td></tr>
+<tr><td>3×3 conv, 384, p1, g2</td><td>384×13×13</td><td>384·384·3·3/2 = 663,552</td><td>64,896</td></tr>
+<tr><td>3×3 conv, 256, p1, g2</td><td>256×13×13</td><td><details style="border:0;padding:0"><summary>? (try it)</summary>256·384·3·3/2 = 442,368</details></td><td>43,264</td></tr>
+<tr><td>3×3 maxpool, s2</td><td>256×6×6</td><td>0</td><td>9,216</td></tr>
+<tr><td>Linear 4096</td><td>4096</td><td>4096·(256·6·6) = 37,748,736</td><td>4,096</td></tr>
+<tr><td>Linear 4096</td><td>4096</td><td>4096·4096 = 16,777,216</td><td>4,096</td></tr>
+<tr><td>Linear 1000</td><td>1000</td><td>1000·4096 = 4,096,000</td><td>1,000</td></tr>
+</table>
+<p>The totals are about <b>61M parameters</b> and <b>932,264 activations</b>. Now look at where each one sits. The three linear layers hold 58.6M of the 61M parameters (about <b>96%</b>), yet produce only 9,192 activations. The first conv layer has just 34,848 parameters but produces the most activations of any layer. <mark>Weights pile up at the end of a CNN, and activations pile up at the start.</mark> The <b>peak</b> activation memory is roughly the largest input + output pair: 150,528 + 290,400 = <b>440,928</b>. <a class="src" href="#r1">[L3, AlexNet #Activations]</a></p>
+
+<h3>Activations, not parameters, are often the real bottleneck</h3>
+<ul>
+<li><b>Inference (int8):</b> at about 70% ImageNet top-1, MobileNetV2-0.75 has 4.6× fewer parameters than ResNet-18, but a 1.8× <i>higher</i> peak activation. <a class="src" href="#r5">[MCUNet, Fig. 2]</a></li>
+<li><b>Imbalance:</b> MobileNetV2's memory peaks at 1,372 kB in block 2, far above a 256 kB microcontroller limit, while later blocks need little.</li>
+<li><b>Training (fp32):</b> MobileNetV2-1.4 has 4.3× fewer parameters than ResNet-50 (102 MB), but its activations shrink only 1.1×. ResNet-50's activations (707 MB) are about 7× larger than its parameters. <a class="src" href="#r6">[TinyTL, Fig. 1]</a></li>
+<li><b>Per layer:</b> early layers have high activation memory, and late layers have high weight memory. It is the same pattern you just found in AlexNet.</li>
+</ul>
+
+<h2>Concept map</h2>
+<div class="kg">
+  <div><h4>Needs first</h4><a href="#s2">Weighted sum</a><a href="#s3">Matrix multiply</a><a href="#s4">Image as grid</a></div>
+  <div><h4>This topic</h4><a class="me" href="#top">NN building blocks</a><a href="#s4">Channel</a><a href="#s5">Conv / grouped / depthwise</a><a href="#s6">Pool, norm, activation</a><a href="#s7">Efficiency metrics</a></div>
+  <div><h4>Leads to</h4><a href="neural-network-pruning.html">Pruning</a><a href="#s7">Quantization</a><a href="#s7">Edge deployment</a></div>
+</div>
+<table><tr><th>From</th><th>Relation</th><th>To</th></tr>
+<tr><td>Fully-connected layer</td><td>formalized-by</td><td>Y = XW<sup>T</sup> + b</td></tr>
+<tr><td>Filter</td><td>causes</td><td>one output channel</td></tr>
+<tr><td>Channel</td><td>part-of</td><td>activation tensor (n, c, h, w)</td></tr>
+<tr><td>Depthwise conv</td><td>is-a</td><td>grouped conv with g = c<sub>i</sub> = c<sub>o</sub></td></tr>
+<tr><td>Latency</td><td>contrasts-with</td><td>throughput</td></tr>
+<tr><td>Model size</td><td>measured-by</td><td>#params × bit width</td></tr>
+<tr><td>Data movement</td><td>causes</td><td>most energy cost</td></tr>
+<tr><td>Channel pruning</td><td>requires</td><td>understanding filters and feature maps</td></tr>
+</table>
+
+<h2>Exam check: try before you open</h2>
+<ol class="qz">
+<li>A conv layer has 32 input channels, 64 output channels and 3×3 kernels. Write W's shape and count the parameters.<details><summary>Answer</summary><p>W : (64, 32, 3, 3), so 64·32·9 = 18,432 parameters (plus 64 biases).</p></details></li>
+<li>The same layer with g = 4 groups. And as depthwise (assume c<sub>i</sub> = c<sub>o</sub> = 32)?<details><summary>Answer</summary><p>Grouped: 18,432/4 = 4,608. Depthwise: 32·9 = 288.</p></details></li>
+<li>Input 3×32×32, 5×5 conv, stride 1, padding 0, 16 filters. What is the output shape?<details><summary>Answer</summary><p>(32 − 5)/1 + 1 = 28, so the output is 16×28×28. The output channel count always equals the number of filters.</p></details></li>
+<li>A model has 25M parameters. What is its model size in fp32 and in int8?<details><summary>Answer</summary><p>fp32: 25M × 4 B = 100 MB. int8: 25 MB.</p></details></li>
+<li>Why can't you judge a CNN's memory needs from #parameters alone?<details><summary>Answer</summary><p>Activations often dominate, especially in early layers and during training. Example: MobileNetV2 has 4.6× fewer parameters than ResNet-18 but a 1.8× higher peak activation.</p></details></li>
+<li>Does pooling add parameters? Does ReLU? Does BatchNorm?<details><summary>Answer</summary><p>Pooling has none. ReLU has none. BatchNorm has two per channel, the trainable γ and β.</p></details></li>
+<li>If you prune 25% of the output channels of layer L, which other layer's weights shrink, and by how much?<details><summary>Answer</summary><p>Layer L+1. Its input channels drop by 25%, so its weights shrink by 25% too. Layer L's own weights also drop by 25%, along with the feature maps between the two layers.</p></details></li>
+</ol>
+
+<h2>What this does not show</h2>
+<p>The slides list Transformers as a building block, but Lectures 2–3 have no slides on them, so this page skips them. MAC/FLOP counting for conv layers belongs to Lecture 4. The calculator in Lab 3 shows MACs only as a preview. The output-size formula comes from a standard reference rather than the slides. All benchmark numbers depend on the hardware and setup named next to them.</p>
+
+<h2>References</h2>
+<ol class="refs">
+  <li id="r1"><a class="t" href="../Lecture3.pdf">CSC 4814/6814 Efficient AI, Lectures 2–3 (Dr. Haoxin Wang, GSU)</a><span class="d">The course slides this page follows: terminology, FC and conv layers, channels, pooling, normalization, activations, efficiency metrics and AlexNet counts. Lecture 2 and Lecture 4 (#MACs) are in the same folder.</span></li>
+  <li id="r2"><a class="t" href="https://papers.nips.cc/paper_files/paper/2012/hash/c399862d3b9d6b76c8436e924a68c45b-Abstract.html">Krizhevsky et al., ImageNet Classification with Deep CNNs (NeurIPS 2012)</a><span class="d">The AlexNet architecture behind the parameter and activation tables.</span></li>
+  <li id="r3"><a class="t" href="https://arxiv.org/abs/1603.07285">Dumoulin & Visin, A guide to convolution arithmetic for deep learning (2016)</a><span class="d">The output-size formula with stride and padding.</span></li>
+  <li id="r4"><a class="t" href="https://doi.org/10.1109/ISSCC.2014.6757323">Horowitz, Computing's Energy Problem (and what we can do about it) (ISSCC 2014)</a><span class="d">The energy-per-operation table and the cost of DRAM access.</span></li>
+  <li id="r5"><a class="t" href="https://arxiv.org/abs/2007.10319">Lin et al., MCUNet: Tiny Deep Learning on IoT Devices (NeurIPS 2020)</a><span class="d">Peak activation vs parameters, MobileNetV2's imbalanced memory, and per-layer memory distribution.</span></li>
+  <li id="r6"><a class="t" href="https://arxiv.org/abs/2007.11622">Cai et al., TinyTL: Reduce Activations, Not Trainable Parameters (NeurIPS 2020)</a><span class="d">Activations as the memory bottleneck in training.</span></li>
+  <li id="r7"><a class="t" href="https://arxiv.org/abs/1803.08494">Wu & He, Group Normalization (ECCV 2018)</a><span class="d">The normalization formula and the Batch, Layer, Instance and Group Norm comparison.</span></li>
+  <li id="r8"><a class="t" href="https://arxiv.org/abs/1801.04381">Sandler et al., MobileNetV2: Inverted Residuals and Linear Bottlenecks (CVPR 2018)</a><span class="d">Depthwise (separable) convolution in an efficient mobile network.</span></li>
+  <li id="r9"><a class="t" href="https://arxiv.org/abs/1409.1556">Simonyan & Zisserman, Very Deep Convolutional Networks (VGG, ICLR 2015)</a><span class="d">The CNN architecture example with its shrinking spatial size and growing channel counts.</span></li>
+  <li id="r10"><a class="t" href="https://arxiv.org/abs/2306.00978">Lin et al., AWQ: Activation-aware Weight Quantization (MLSys 2024)</a><span class="d">The LLaMA-2 speedup example (50 → 166 tokens/s on an RTX 4090).</span></li>
+</ol>
+
+<footer>Built with the Philosopher-OKF skill · technology-engineering · deep · undergrad · Companion page: <a href="neural-network-pruning.html">Neural Network Pruning</a></footer>
+</div></div>
+
+<script>
+(function(){
+function tabs(lab,fn){var b=lab.querySelectorAll('[data-g] button');b.forEach(function(x){x.onclick=function(){b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x.dataset.m)}})}
+function cell(v,c,st){var s=document.createElement('span');s.textContent=v;if(c)s.className=c;if(st)s.setAttribute('style',st);return s}
+function shade(v,lo,hi){var t=Math.max(0,Math.min(1,(v-lo)/((hi-lo)||1)));var l=Math.round(255-t*200);return 'background:rgb('+l+','+l+','+Math.min(255,l+20)+');color:'+(t>.55?'#fff':'#1d1c1b')+';border:1px solid #e6e3de'}
+
+/* Lab 1: kernels */
+var IMG=[[1,1,1,9,9,9],[1,1,1,9,9,9],[1,9,1,9,9,9],[1,1,1,9,9,9],[1,1,1,9,9,9],[1,1,1,9,9,9]];
+var K={id:{k:[[0,0,0],[0,1,0],[0,0,0]],d:1,t:'Identity copies the center pixel. The output is just the input (cropped to 4×4).'},
+edge:{k:[[-1,-1,-1],[-1,8,-1],[-1,-1,-1]],d:1,t:'Edge detect is 0 on flat regions and large where brightness changes: the edge and the dot light up.'},
+blur:{k:[[1,1,1],[1,1,1],[1,1,1]],d:9,t:'Blur averages the 3×3 neighbourhood (×1/9). The sharp edge becomes a soft ramp.'},
+sharp:{k:[[0,-1,0],[-1,5,-1],[0,-1,0]],d:1,t:'Sharpen exaggerates differences: dark gets darker and bright gets brighter next to the edge.'}};
+function kk(m){var c=K[m],o=[],lo=1e9,hi=-1e9;for(var i=0;i<4;i++){o.push([]);for(var j=0;j<4;j++){var s=0;for(var a=0;a<3;a++)for(var b=0;b<3;b++)s+=c.k[a][b]*IMG[i+a][j+b];s=Math.round(s/c.d*10)/10;o[i].push(s);lo=Math.min(lo,s);hi=Math.max(hi,s)}}
+ var e=document.getElementById('k-in');e.innerHTML='';IMG.forEach(function(r){r.forEach(function(v){e.appendChild(cell(v,'',shade(v,0,9)))})});
+ e=document.getElementById('k-k');e.innerHTML='';c.k.forEach(function(r){r.forEach(function(v){e.appendChild(cell((c.d>1?'1/9':v),'nz'))})});
+ e=document.getElementById('k-out');e.innerHTML='';o.forEach(function(r){r.forEach(function(v){e.appendChild(cell(v,'',shade(v,Math.min(lo,0),Math.max(hi,9))))})});
+ document.getElementById('k-stat').textContent=c.t+' Each output = Σ (kernel × the 3×3 patch under it).'}
+tabs(document.getElementById('labK'),kk);kk('id');
+
+/* Lab 2: channel pruning between two layers */
+var R=document.getElementById('c-r');
+function fmt(n){return n.toLocaleString('en-US')}
+function cc(){var k=+R.value,HW=56*56;document.getElementById('c-k').textContent=k;document.getElementById('c-k2').textContent=k;
+ var v=document.getElementById('c-vis');v.innerHTML='';for(var i=0;i<16;i++)v.appendChild(cell('',i*8<k?'':'p','width:1.2rem;height:1.2rem'));
+ var rows=[['Layer A weights',k*64*9,128*64*9],['Feature maps',k*HW,128*HW],['Layer B weights',256*k*9,256*128*9],['MACs (A + B)',(k*64*9+256*k*9)*HW,(128*64*9+256*128*9)*HW]];
+ document.getElementById('c-bars').innerHTML=rows.map(function(r){return '<div class="bar" style="grid-template-columns:8rem 1fr 6.5rem"><span>'+r[0]+'</span><i style="--v:'+(100*r[1]/r[2])+'%"></i><b>'+fmt(r[1])+'</b></div>'}).join('');
+ document.getElementById('c-sum').innerHTML='Each square = 8 channels. Keeping <b>'+k+'/128</b> channels leaves <b>'+Math.round(100*k/128)+'%</b> of every row above. All of it is still dense, so it is a real speedup.'}
+R.oninput=cc;cc();
+
+/* Lab 3: conv calculator */
+var P={a1:[3,224,96,11,4,2,1],a2:[96,27,256,5,1,2,2],a5:[384,13,256,3,1,1,2],dw:[32,56,32,3,1,1,32]};
+var names=['c_i','h_i = w_i','c_o','k','stride s','pad p','groups g'],box=document.getElementById('l-in'),inp=[];
+names.forEach(function(n,i){var d=document.createElement('div');d.innerHTML=n+'<br>';var x=document.createElement('input');x.className='w';x.type='number';x.oninput=lc;d.appendChild(x);box.appendChild(d);inp.push(x)});
+function lc(){var v=inp.map(function(x){return +x.value}),ci=v[0],h=v[1],co=v[2],k=v[3],s=v[4]||1,p=v[5],g=v[6]||1,o=Math.floor((h+2*p-k)/s)+1;
+ var el=document.getElementById('l-out');if(ci%g||co%g||o<1){el.innerHTML='<b>Invalid:</b> g must divide c_i and c_o, and the kernel must fit.';return}
+ var par=co*(ci/g)*k*k;el.innerHTML='W shape = ('+co+', '+(ci/g)+', '+k+', '+k+')'+(g>1?' &nbsp;· '+g+' groups':'')+'<br>output = <b>'+co+'×'+o+'×'+o+'</b> &nbsp;(h_o = ⌊('+h+'+2·'+p+'−'+k+')/'+s+'⌋+1 = '+o+')<br>#params = <b>'+fmt(par)+'</b> &nbsp;· #activations out = <b>'+fmt(co*o*o)+'</b> &nbsp;· #MACs = <b>'+fmt(par*o*o)+'</b> <span class="chip">Lecture 4 preview</span>'}
+function lp(m){P[m].forEach(function(x,i){inp[i].value=x});lc()}
+tabs(document.getElementById('labL'),lp);lp('a1');
+
+/* Lab 4: pooling */
+var PI=[[5,0,1,7],[2,1,3,5],[0,2,3,1],[2,8,1,3]],pm='max';
+function pp(m){pm=m;var a=document.getElementById('p-in');a.innerHTML='';var ins=[];PI.forEach(function(r,i){r.forEach(function(v,j){var c=cell(v,'nz');c.dataset.w=(i>>1)*2+(j>>1);ins.push(c);a.appendChild(c)})});
+ var o=document.getElementById('p-out');o.innerHTML='';for(var w=0;w<4;w++){var bi=(w>>1)*2,bj=(w&1)*2,vals=[PI[bi][bj],PI[bi][bj+1],PI[bi+1][bj],PI[bi+1][bj+1]];
+  var r=m==='max'?Math.max.apply(null,vals):vals.reduce(function(s,x){return s+x},0)/4;var c=cell(r);(function(w,vals,r){c.onmouseenter=function(){ins.forEach(function(x){x.className=(+x.dataset.w===w)?'':'nz'});document.getElementById('p-stat').textContent=(m==='max'?'max':'mean')+'('+vals.join(', ')+') = '+r}})(w,vals,r);o.appendChild(c)}}
+tabs(document.getElementById('labP'),pp);pp('max');
+
+/* Energy bars (log scale) */
+var E=[['32b int ADD',.1],['32b float ADD',.9],['32b register file',1],['32b int MULT',3.1],['32b float MULT',3.7],['32b SRAM cache',5],['32b DRAM memory',640]];
+document.getElementById('e-bars').innerHTML=E.map(function(e){var v=(Math.log10(e[1])+1.2)/(Math.log10(640)+1.2)*100;return '<div class="bar" style="grid-template-columns:9rem 1fr 3.5rem"><span>'+e[0]+'</span><i style="--v:'+v+'%"></i><b>'+e[1]+' pJ</b></div>'}).join('')+'<p class="cap" style="text-align:center">Log-scale bars · values from the slide\'s 45 nm table</p>';
+})();
+</script>
+</body></html>

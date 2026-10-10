@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Neural Network Pruning</title><style>:root{--ink:#1d1c1b;--mut:#6c6863;--line:#e6e3de;--hl:#fde7c4;--ac:#5b4fc7;--mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;--serif:Charter,Georgia,serif}*{box-sizing:border-box}body{margin:0;background:#f6f6f5;color:var(--ink);font:17px/1.85 var(--serif)}.sheet{max-width:56rem;margin:0 auto;background:#fff;padding:3.5rem 1.25rem 4rem}.col{max-width:34rem;margin:0 auto}header{text-align:center}.eyebrow,.cap,figcaption,th,.node,.src,.kg h4{font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em}.eyebrow{font-size:.62rem;color:var(--mut);text-align:center}h1{font-weight:400;font-size:clamp(1.8rem,5vw,2.4rem);line-height:1.12;margin:1rem 0 1.4rem}.deck{color:var(--mut);font-size:.95rem;line-height:1.9;margin:0 auto 1.3rem}.orig{font:.7rem var(--mono);text-decoration:none;border-bottom:1px solid var(--line)}hr{border:0;border-top:1px solid var(--mut);width:1.2rem;margin:3rem auto}h2{font-size:1rem;margin:3.2rem 0 1rem}h3{font-size:.95rem;font-style:italic;margin:2rem 0 .6rem}p,li,dd{font-size:.95rem}p{margin:0 0 1.25rem;text-align:justify;hyphens:auto}mark{background:var(--hl);color:inherit;padding:.1em .2em;-webkit-box-decoration-break:clone;box-decoration-break:clone}a{color:inherit}a.src{font-size:.58rem;color:var(--mut);text-decoration:none;border-bottom:1px dotted var(--mut);white-space:nowrap}.note{font:.78rem/1.6 var(--mono);color:var(--mut);border-left:2px solid var(--line);padding:.2rem .8rem;margin:1.5rem 0}figure{margin:2.5rem 0;text-align:center}figcaption,.cap{font-size:.6rem;line-height:1.5;color:var(--mut);margin-top:.8rem}.flow{display:flex;flex-wrap:wrap;justify-content:center;gap:1.8rem 1.6rem;margin:1rem 0}.node{position:relative;border:1px solid #cfcaf0;background:#f3f2fc;border-radius:8px;padding:.6rem .75rem;font-size:.62rem;line-height:1.4;min-width:6.5rem}.node small{display:block;color:var(--mut);font-size:.55rem}.node.in{border-color:#f0c9a0;background:#fdf1e3}.node.fz{border-color:#d9d6d1;background:#faf9f8}.node:not(:last-child):after{content:"\2192";position:absolute;right:-1.25rem;top:50%;transform:translateY(-50%);color:var(--ac);font-size:.9rem}table{width:100%;border-collapse:collapse;font-size:.85rem;margin:1.5rem 0}th,td{padding:.5rem .6rem;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{font-size:.58rem;color:var(--mut)}.kg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.6rem;margin:1.5rem 0}.kg>div{display:flex;flex-direction:column;gap:.5rem;position:relative}.kg>div+div:before{content:"\2192";position:absolute;left:-1.2rem;top:50%;color:var(--ac)}.kg h4{margin:0;font-size:.58rem;color:var(--mut);text-align:center}.kg a{border:1px solid var(--line);border-radius:6px;padding:.4rem .6rem;font-size:.8rem;text-align:center;text-decoration:none}.kg .me{border-color:var(--ac);background:#f3f2fc}code{font-family:var(--mono);font-size:.85em}.refs{list-style:none;counter-reset:r;padding:0;margin:1.5rem 0}.refs li{counter-increment:r;position:relative;padding:1rem 0 1rem 2.2rem;border-top:1px solid var(--line)}.refs li:before{content:counter(r) ".";position:absolute;left:0;top:1.2rem;font:.6rem var(--mono);color:var(--mut)}.refs a.t{font-weight:700;font-size:.9rem;text-decoration:none}.refs .d{display:block;font-size:.75rem;line-height:1.6;color:var(--mut)}footer{text-align:center;font:.6rem var(--mono);color:var(--mut);margin-top:3rem}@media(max-width:560px){.kg{grid-template-columns:1fr}.kg>div+div:before{content:"\2193";left:50%;top:-1.3rem}}@media(max-width:820px){.flow{flex-direction:column;align-items:center}.node:not(:last-child):after{content:"\2193";right:auto;left:50%;top:auto;bottom:-1.4rem;transform:translateX(-50%)}}
+.bar{display:grid;grid-template-columns:7rem 1fr 2.5rem;gap:.6rem;align-items:center;font-size:.62rem;margin:.4rem 0}.bar i{height:.55rem;border-radius:2px;background:linear-gradient(90deg,var(--ac) var(--v),#eee 0)}@media(max-width:560px){.bar{grid-template-columns:5rem 1fr 2rem}}
+.eq{text-align:center;font-size:1.05rem;margin:1.5rem 0}
+details{border-top:1px solid var(--line);padding:.7rem 0}summary{cursor:pointer;font-size:.62rem}
+@media print{body{background:#fff}.sheet{padding:0}.orig{display:none}}@media(min-width:900px){figure>.flow{margin-left:-10rem;margin-right:-10rem}}
+.lab{border:1px solid var(--line);border-radius:8px;padding:1rem 1rem .6rem;margin:2rem 0;background:#fcfcfb}.lab .cap{text-align:left;margin:0 0 .7rem;color:var(--ac)}.btns{display:flex;flex-wrap:wrap;gap:.4rem;margin:.4rem 0 .9rem}.btns button{font:.6rem var(--mono);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:5px;padding:.45rem .6rem;cursor:pointer}.btns button.on{border-color:var(--ac);background:#f3f2fc;color:var(--ac)}.mx{display:inline-grid;gap:3px;font:.7rem var(--mono)}.mx span{width:2.6rem;height:1.9rem;display:flex;align-items:center;justify-content:center;border-radius:3px;background:#5b4fc7;color:#fff;transition:all .25s}.mx span.p{background:#fff;color:#c9c5bf;border:1px dashed #d9d6d1;text-decoration:line-through}.mx span.z{background:#fde7c4;color:var(--ink)}.mx span.nz{background:#fff;color:var(--mut);border:1px solid var(--line)}.mx.sm span{width:2.1rem;height:1.6rem;font-size:.62rem}.stat{font:.68rem/1.7 var(--mono);color:var(--mut);margin:.8rem 0 .3rem}.stat b{color:var(--ink)}.row2{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:flex-start;justify-content:center}.row2>div{text-align:center}.row2 .cap{text-align:center;color:var(--mut)}input.w{width:3.2rem;font:.75rem var(--mono);text-align:center;padding:.3rem;border:1px solid var(--line);border-radius:4px}input[type=range]{width:100%;accent-color:#5b4fc7}.predict{border-left:2px solid #f0c9a0;background:#fdf8f0;padding:.6rem .9rem;margin:1.5rem 0;font-size:.9rem}.predict b{font:.6rem var(--mono);text-transform:uppercase;letter-spacing:.1em;color:#b4782f;display:block}details p{margin:.6rem 0 .4rem}summary{font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ac)}.big{font-size:1.4rem;font-weight:700;color:var(--ac)}.chip{display:inline-block;font:.58rem var(--mono);letter-spacing:.08em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:.1rem .5rem;margin-left:.3rem;color:var(--mut);vertical-align:middle}.qz li{margin-bottom:.4rem}
+</style></head>
+<body><div class="sheet"><div class="col">
+
+<header id="top">
+  <div class="eyebrow">Technology · Efficient AI · CSC 4814/6814 · Lectures 4–6</div>
+  <h1>Neural Network Pruning: Cutting a Model Without Killing It</h1>
+  <p class="deck">Most weights in a trained network contribute almost nothing. Pruning removes them and leaves a smaller, faster model that is nearly as accurate. Doing it well means answering four questions: what unit to cut, which ones to cut, how much to cut in each layer, and how to recover afterward. This page walks through all four, with small labs where you can try each idea yourself.</p>
+  <a class="orig" href="../Lecture6.pdf">Open the lecture slides ↗</a>
+</header>
+<hr>
+
+<figure><div class="flow">
+  <div class="node in">Dense model<small>trained, oversized</small></div>
+  <div class="node">Granularity<small>what unit?</small></div>
+  <div class="node">Criterion<small>which ones?</small></div>
+  <div class="node">Ratio<small>how much per layer?</small></div>
+  <div class="node fz">Fine-tune<small>recover accuracy</small></div>
+</div>
+<figcaption>The four decisions of pruning, in the order the lectures cover them</figcaption></figure>
+
+<div class="predict"><b>Predict first</b>A trained AlexNet has 61 million weights. How many do you think you could delete with no loss in accuracy: 10%, 50% or 90%? Keep your guess in mind; the answer is in section 6.</div>
+
+<h2 id="s1">1 · Pruning is an optimization problem with a budget</h2>
+
+<p>The slides start with an analogy: pruning is like trimming a tree. You cut away the branches that are not pulling their weight, and the tree keeps its shape, stays healthy, and grows back stronger. In a network, the branches are weights. The human brain does the same thing: it first grows many connections, then removes the less useful ones as it develops. <a class="src" href="#r1">[L4–5, intro slides]</a></p>
+
+<p>You can prune two kinds of things. <b>Synapses</b> are the weights (parameters) on the connections. <b>Neurons</b> are the activations: the outputs of the units themselves. Removing synapses means fewer parameters and less computation. Removing neurons means fewer activations and less data movement, which matters because moving data in memory costs far more energy than doing arithmetic. <a class="src" href="#r1">[L4, Memory is expensive]</a></p>
+
+<p>Formally, pruning finds the best pruned weights <i>W<sub>P</sub></i> under a hard budget:</p>
+<p class="eq">arg min<sub>W<sub>P</sub></sub> L(x; W<sub>P</sub>) &nbsp; subject to &nbsp; ‖W<sub>P</sub>‖<sub>0</sub> &lt; N</p>
+<p>Here <i>L</i> is the training objective, <i>x</i> is the input, <i>W</i> are the original weights and <i>W<sub>P</sub></i> the pruned ones. ‖·‖<sub>0</sub> counts the nonzero entries, and <i>N</i> is the target number of nonzeros. <mark>Out of all possible weight values, find the ones that make the prediction error smallest, but you may keep at most N of them nonzero.</mark> Every method below is a different way to approximate this problem, because solving it exactly would mean trying every possible subset of weights. <a class="src" href="#r1">[L5–6, formulation]</a></p>
+
+<h2 id="s2">2 · Granularity trades flexibility for real speed</h2>
+
+<p>Granularity is the <i>unit</i> you remove: a single weight, a group of weights, or an entire channel or filter. Start with a 3×3 weight matrix. <b>Fine-grained</b> (unstructured) pruning may zero any entry, for example keeping only <i>w</i><sub>11</sub>, <i>w</i><sub>13</sub>, <i>w</i><sub>22</sub>, <i>w</i><sub>31</sub> and <i>w</i><sub>33</sub>. <b>Coarse-grained</b> (structured) pruning removes whole rows, so what remains is simply a smaller dense matrix. <a class="src" href="#r1">[L5, 2D weight matrix]</a></p>
+
+<table><tr><th></th><th>Fine-grained / unstructured</th><th>Coarse-grained / structured</th></tr>
+<tr><td>Index choice</td><td>Most flexible</td><td>Less flexible: a subset of the fine-grained choices</td></tr>
+<tr><td>Hardware</td><td>Hard to accelerate (irregular)</td><td>Easy to accelerate: just a smaller matrix</td></tr>
+</table>
+
+<div class="lab" id="lab1">
+  <div class="cap">Lab 1 · Same matrix, same 50% budget, three granularities</div>
+  <div class="btns" data-g>
+    <button class="on" data-m="dense">Dense</button>
+    <button data-m="fine">Fine-grained 50%</button>
+    <button data-m="nm">2:4 pattern</button>
+    <button data-m="row">Row (structured)</button>
+  </div>
+  <div style="text-align:center"><div class="mx" id="g-mx" style="grid-template-columns:repeat(8,auto)"></div></div>
+  <div class="stat" id="g-stat"></div>
+</div>
+
+<p>Try each button. Every mode keeps exactly 16 of 32 weights, yet the share of total weight magnitude kept falls as the pattern becomes more regular. <mark>The more structure you demand, the more good weights you are forced to throw away. In exchange, the hardware gets something it can actually run faster.</mark></p>
+
+<div class="predict"><b>New to channels?</b>A conv layer's weights have shape (c<sub>o</sub>, c<sub>i</sub>, k<sub>h</sub>, k<sub>w</sub>), where each output channel is one feature map made by one filter. If that sentence is fuzzy, read <a href="neural-network-building-blocks.html#s4">What is a channel?</a> on the companion page first, and try its channel-pruning lab. Everything below will make more sense.</div>
+<h3>The spectrum for convolutional layers</h3>
+<p>A conv weight tensor has four dimensions: output channels <i>c<sub>o</sub></i>, input channels <i>c<sub>i</sub></i>, kernel height <i>k<sub>h</sub></i> and kernel width <i>k<sub>w</sub></i>. The slide's example uses 3×3 kernels with <i>c<sub>i</sub></i> = 2. Going from irregular to regular, the common granularities are: <b>fine-grained</b> (any single weight), <b>pattern-based</b> (fixed shapes, "like Tetris"), <b>vector-level</b> (a row of a kernel), <b>kernel-level</b> (a whole <i>k<sub>h</sub></i>×<i>k<sub>w</sub></i> kernel) and <b>channel-level</b> (a whole channel). <a class="src" href="#r3">[Mao et al., Fig. 1]</a></p>
+
+<table><tr><th>Granularity</th><th>Pro</th><th>Con</th></tr>
+<tr><td>Fine-grained</td><td>Flexible indices, usually the largest compression ratio</td><td>Needs special hardware to turn sparsity into speed</td></tr>
+<tr><td>Pattern (N:M)</td><td>Supported on NVIDIA Ampere GPUs, about 2× speedup, accuracy kept</td><td>Fixed 50% sparsity for 2:4</td></tr>
+<tr><td>Vector / kernel</td><td>More regular than fine-grained</td><td>Less flexible</td></tr>
+<tr><td>Channel</td><td>Direct speedup: the result is just a thinner network</td><td>Smallest compression ratio</td></tr>
+</table>
+
+<p><b>Fine-grained in numbers.</b> Because the redundant weights can be chosen freely, the compression is large: <a class="src" href="#r2">[Han et al., Table 1–4]</a></p>
+<table><tr><th>Network</th><th>Before</th><th>After</th><th>Reduction</th></tr>
+<tr><td>AlexNet</td><td>61 M</td><td>6.7 M</td><td>9×</td></tr>
+<tr><td>VGG-16</td><td>138 M</td><td>10.3 M</td><td>12×</td></tr>
+<tr><td>GoogleNet</td><td>7 M</td><td>2.0 M</td><td>3.5×</td></tr>
+<tr><td>ResNet50</td><td>26 M</td><td>7.47 M</td><td>3.4×</td></tr>
+</table>
+<p>Look at which networks compress least. GoogleNet and ResNet50 were already designed to be lean, so they have less fat to cut.</p>
+
+<p><b>N:M sparsity.</b> In every <i>M</i> contiguous elements, <i>N</i> are pruned. The classic case is 2:4, which is 50% sparsity. There are C(4,2) = <b>6</b> ways to choose which two survive, so each kept value needs only a <b>2-bit index</b>. The compressed matrix stores half the values plus those indices. NVIDIA's Ampere architecture runs this at up to about 2× speed. Accuracy is maintained on a wide range of tasks: <a class="src" href="#r4">[Mishra et al., §4]</a></p>
+<table><tr><th>Network</th><th>Metric</th><th>Dense FP16</th><th>2:4 sparse</th></tr>
+<tr><td>ResNet-50</td><td>Top-1</td><td>76.1</td><td>76.2</td></tr>
+<tr><td>ResNeXt-101 32x8d</td><td>Top-1</td><td>79.3</td><td>79.3</td></tr>
+<tr><td>Xception</td><td>Top-1</td><td>79.2</td><td>79.2</td></tr>
+<tr><td>SSD-RN50</td><td>bbAP</td><td>24.8</td><td>24.8</td></tr>
+<tr><td>MaskRCNN-RN50</td><td>bbAP</td><td>37.9</td><td>37.9</td></tr>
+<tr><td>FairSeq Transformer</td><td>BLEU</td><td>28.2</td><td>28.5</td></tr>
+<tr><td>BERT-Large</td><td>F1</td><td>91.9</td><td>91.9</td></tr>
+</table>
+
+<p><b>Channel pruning.</b> Removing whole channels gives a direct speedup, because the network simply has fewer channels, but the compression ratio is smaller. Pruning <i>every</i> layer by the same 0.3 ("uniform shrink") does worse than giving each layer its own sparsity, for example 0.5, 0.3, 0.7, 0.2, 0.3. On ImageNet, channel pruning with AMC reaches higher accuracy at every latency than uniform scaling does. How to find those per-layer numbers is section 5. <a class="src" href="#r9">[He et al. 2018, Fig. 1]</a></p>
+
+<h2 id="s3">3 · To pick weights, ask "how much would the loss notice?"</h2>
+
+<p>The rule: <i>the less important the removed parameters are, the better the pruned network performs.</i> Try it on one neuron: <i>y</i> = ReLU(10<i>x</i><sub>0</sub> − 8<i>x</i><sub>1</sub> + 0.1<i>x</i><sub>2</sub>). If you must delete one weight, which one? <a class="src" href="#r1">[L5, Selection of synapses]</a></p>
+<details><summary>Answer</summary><p>The 0.1. Removing it changes <i>y</i> the least, because its input is scaled down to almost nothing. That intuition is the whole idea behind magnitude-based pruning.</p></details>
+
+<h3>Method 1 · Magnitude-based (heuristic)</h3>
+<p>Weights with larger absolute values are treated as more important. For element-wise pruning, importance = |<i>w</i>|. For structured pruning, you measure the magnitude of a whole group <i>S</i> (such as a row) with the L<sub>p</sub>-norm: <a class="src" href="#r2">[Han et al., §3]</a></p>
+<p class="eq">‖W<sup>(S)</sup>‖<sub>p</sub> = ( Σ<sub>i∈S</sub> |w<sub>i</sub>|<sup>p</sup> )<sup>1/p</sup></p>
+<p>Use p = 1 for the row-wise L1 norm (Σ|<i>w<sub>i</sub></i>|) and p = 2 for the L2 norm (<span style="white-space:nowrap">√Σ|<i>w<sub>i</sub></i>|²</span>).</p>
+
+<div class="lab" id="lab2">
+  <div class="cap">Lab 2 · Magnitude pruning at 50%. Edit the weights.</div>
+  <div class="btns" data-g>
+    <button class="on" data-m="el">Element-wise |w|</button>
+    <button data-m="l1">Row-wise L1</button>
+    <button data-m="l2">Row-wise L2</button>
+  </div>
+  <div class="row2">
+    <div><div class="cap">Weight</div><div class="mx" style="grid-template-columns:repeat(2,auto)">
+      <input class="w" value="3"><input class="w" value="-2"><input class="w" value="1"><input class="w" value="-5"></div></div>
+    <div><div class="cap">Importance</div><div class="mx" id="m-imp" style="grid-template-columns:repeat(2,auto)"></div></div>
+    <div><div class="cap">Pruned weight</div><div class="mx" id="m-out" style="grid-template-columns:repeat(2,auto)"></div></div>
+  </div>
+  <div class="stat" id="m-stat"></div>
+</div>
+<p>With the slide's example [[3, −2], [1, −5]], element-wise pruning keeps 3 and −5. Row-wise L1 gives the rows importance 5 and 6, and L2 gives √13 and √26. Either norm kills row 0, leaving [[0, 0], [1, −5]]. Now change −2 to −4 and see whether L1 and L2 still agree. <a class="src" href="#r1">[L5, Method 1 examples]</a></p>
+
+<h3>Method 2 · Scaling-based (for filters)</h3>
+<p>Each filter (output channel) of a conv layer gets a <b>trainable scaling factor</b> γ, which multiplies that channel's output. After training, channels with small γ are pruned. In the slide, filters with factors 0.10 and 0.29 are removed, while those with 1.17, 0.82 and 0.56 survive. <mark>Instead of guessing importance afterward, the network learns it during training.</mark> <a class="src" href="#r5">[Liu et al., §3]</a></p>
+
+<h3>Method 3 · Second-order (Optimal Brain Damage)</h3>
+<p>The goal here is to minimize the increase in loss caused by pruning. Expand that increase with a Taylor series: <a class="src" href="#r6">[LeCun et al., §2]</a></p>
+<p class="eq">δL = L(x;W) − L(x;W<sub>P</sub> = W − δW) = Σ<sub>i</sub> g<sub>i</sub>δw<sub>i</sub> + ½Σ<sub>i</sub> h<sub>ii</sub>δw<sub>i</sub><sup>2</sup> + ½Σ<sub>i≠j</sub> h<sub>ij</sub>δw<sub>i</sub>δw<sub>j</sub> + O(‖δW‖<sup>3</sup>)</p>
+<p>where <i>g<sub>i</sub></i> = ∂L/∂w<sub>i</sub> and <i>h<sub>ij</sub></i> = ∂²L/∂w<sub>i</sub>∂w<sub>j</sub>. Optimal Brain Damage assumes three things, and each one deletes a term:</p>
+<table><tr><th>Assumption</th><th>Term removed</th></tr>
+<tr><td>L is nearly quadratic</td><td>O(‖δW‖³), the last term</td></tr>
+<tr><td>Training has converged</td><td>Σ g<sub>i</sub>δw<sub>i</sub>, the first-order term (the gradient is about 0)</td></tr>
+<tr><td>Deleting each parameter has an independent effect</td><td>The cross terms h<sub>ij</sub>, i ≠ j</td></tr>
+</table>
+<p class="eq">δL<sub>i</sub> = L(x;W) − L(x;W<sub>P</sub> | w<sub>i</sub> = 0) ≈ ½ h<sub>ii</sub> w<sub>i</sub><sup>2</sup></p>
+<p>This is the estimated increase in loss if <i>w<sub>i</sub></i> is set to zero. <b>Build the intuition:</b> if every <i>h<sub>ii</sub></i> were equal, ranking by ½<i>h<sub>ii</sub>w<sub>i</sub></i>² would be the same as ranking by |<i>w<sub>i</sub></i>|. Magnitude pruning is the special case that ignores curvature. OBD's extra contribution is noticing that a small weight sitting in a steep direction of the loss can matter more than a large weight in a flat one.</p>
+
+<h2 id="s4">4 · To pick neurons, watch them while they work</h2>
+<p>Removing a neuron removes a whole row of the weight matrix in a linear layer, or a whole channel in a conv layer. <mark>Neuron pruning is coarse-grained weight pruning.</mark> The rule is the same as before: the less useful the removed neurons are, the better the pruned network performs. <a class="src" href="#r1">[L5–6, Selection of neurons]</a></p>
+
+<h3>Percentage-of-zero (APoZ)</h3>
+<p>ReLU outputs zero for every negative input. A channel that is almost always zero is barely contributing. The <b>Average Percentage of Zeros</b> (APoZ) of a channel counts its zero activations over a batch. <i>The smaller the APoZ, the more important the neuron.</i> <a class="src" href="#r7">[Hu et al., §3]</a></p>
+
+<div class="lab" id="lab3">
+  <div class="cap">Lab 3 · The slide's activations: batch of 2, 3 channels, 4×4 each</div>
+  <div class="predict" style="margin-top:0"><b>Your turn</b>Count the zeros per channel across both inputs, then decide which channel to prune.</div>
+  <div class="btns"><button id="a-btn">Highlight zeros + compute APoZ</button></div>
+  <div id="a-grid"></div>
+  <div class="stat" id="a-stat"></div>
+</div>
+<p>One practical catch: APoZ depends on data, so <i>you must actually run a few inferences</i> to measure it. Weight magnitude, by contrast, can be read straight from the model file. <a class="src" href="#r1">[L5, APoZ]</a></p>
+
+<h3>Regression-based (layer reconstruction)</h3>
+<p>Instead of tracking the network's final loss <i>L</i>(x; W), this method minimizes the reconstruction error of <b>one layer's outputs</b>. That is a smaller, local problem. Split the layer's matrix product by input channel: <a class="src" href="#r8">[He et al. 2017, §3.1]</a></p>
+<p class="eq">Z = XW<sup>T</sup> = Σ<sub>c=0</sub><sup>c<sub>i</sub>−1</sup> X<sub>c</sub>W<sub>c</sub><sup>T</sup></p>
+<p class="eq">arg min<sub>W,β</sub> ‖Z − Ẑ‖<sub>F</sub><sup>2</sup> = ‖Z − Σ<sub>c</sub> β<sub>c</sub>X<sub>c</sub>W<sub>c</sub><sup>T</sup>‖<sub>F</sub><sup>2</sup> &nbsp; s.t. &nbsp; ‖β‖<sub>0</sub> ≤ N<sub>c</sub></p>
+<p>β is a coefficient vector of length <i>c<sub>i</sub></i> that selects channels: β<sub>c</sub> = 0 means channel <i>c</i> is pruned. <i>N<sub>c</sub></i> is the number of nonzero channels. Solve it by <b>alternating</b>: fix W and solve for β to choose channels, then fix β and solve for W to minimize the reconstruction error. In other words, after removing channels, the remaining weights adjust to make up for them.</p>
+
+<h2 id="s5">5 · Each layer needs its own ratio</h2>
+<p>Non-uniform pruning beats uniform shrinking because layers differ in <b>sensitivity</b>. Some, like the first layer, are fragile; others are highly redundant. <a class="src" href="#r9">[He et al. 2018, §1]</a></p>
+
+<h3>Sensitivity analysis (VGG-11 on CIFAR-10)</h3>
+<ol>
+<li>Pick a layer <i>L<sub>i</sub></i>.</li>
+<li>Prune only that layer, at ratios r ∈ {0, 0.1, …, 0.9} (or other strides), and record the accuracy drop ΔAcc<sub>r</sub><sup>i</sup>.</li>
+<li>Repeat for every layer.</li>
+<li>Pick a degradation threshold <i>T</i> that gives the overall pruning rate you want. Each layer's ratio is the largest r whose accuracy stays above <i>T</i>.</li>
+</ol>
+
+<div class="lab" id="lab4">
+  <div class="cap">Lab 4 · Drag the threshold T and read off per-layer ratios</div>
+  <input type="range" id="s-T" min="30" max="89" value="80">
+  <div class="stat">Threshold T = <b id="s-Tv">80</b>% accuracy</div>
+  <div id="s-bars"></div>
+  <div class="stat" id="s-sum"></div>
+  <p class="note" style="margin-bottom:.4rem">Curves traced by eye from the slide's VGG-11/CIFAR-10 plot. They're for building intuition, not exact values.</p>
+</div>
+
+<p>Is this optimal? Probably not, <mark>because sensitivity analysis tests each layer alone and ignores how layers interact.</mark> Pruning L3 changes what L4 receives. Conventionally, filling this gap takes human expertise and many rounds of trial and error. Can we push a button instead? <a class="src" href="#r1">[L6, Finding pruning ratios]</a></p>
+
+<h3>AMC: pruning as reinforcement learning</h3>
+<p>AMC (AutoML for Model Compression) replaces the human with an agent that works through the network one layer at a time. <a class="src" href="#r9">[He et al. 2018, §3]</a></p>
+<figure><div class="flow">
+  <div class="node in">State s<small>layer idx, N, C, H, W, kernel, FLOPs…</small></div>
+  <div class="node">DDPG agent<small>actor + critic</small></div>
+  <div class="node">Action a ∈ [0,1)<small>sparsity of layer t</small></div>
+  <div class="node fz">Reward<small>−Error, or −∞</small></div>
+</div><figcaption>The agent compresses layer t, sees the result, moves to t+1</figcaption></figure>
+<ul>
+<li><b>Action</b> is a continuous ratio, which is why they use DDPG: it supports continuous actions.</li>
+<li><b>Reward</b> R = −Error if the result satisfies the constraints, and −∞ if not. A variant uses −Error·log(FLOP).</li>
+<li><b>Latency</b> constraints are handled with a pre-built lookup table (LUT) of measured layer latencies.</li>
+</ul>
+<p>On ResNet50, AMC finds sparser layers than a human expert. Density is the share of nonzero weights, so lower is better:</p>
+<div class="bar"><span>Conv1</span><i style="--v:43%"></i><b>43 vs 50</b></div>
+<div class="bar"><span>ResBlock1</span><i style="--v:28%"></i><b>28 vs 31</b></div>
+<div class="bar"><span>ResBlock2</span><i style="--v:28%"></i><b>28 vs 31</b></div>
+<div class="bar"><span>ResBlock3</span><i style="--v:23%"></i><b>23 vs 30</b></div>
+<div class="bar"><span>ResBlock4</span><i style="--v:19%"></i><b>19 vs 30</b></div>
+<div class="bar"><span>FC</span><i style="--v:10%"></i><b>10 vs 20</b></div>
+<div class="bar"><span>Total</span><i style="--v:20%"></i><b>20 vs 29</b></div>
+<p class="cap" style="text-align:center">AMC density % (bar) vs human expert %</p>
+<p>On MobileNet, measured with TF-Lite on a Samsung Galaxy S7 Edge (Snapdragon SoC, single core, batch size 1): <a class="src" href="#r9">[He et al. 2018, Table 5]</a></p>
+<table><tr><th>Model</th><th>MAC</th><th>Top-1</th><th>Latency</th><th>Speedup</th><th>Memory</th></tr>
+<tr><td>1.0 MobileNet</td><td>569M</td><td>70.6%</td><td>119.0 ms</td><td>1×</td><td>20.1 MB</td></tr>
+<tr><td>AMC (50% FLOPs)</td><td>285M</td><td>70.5%</td><td>64.4 ms</td><td>1.8×</td><td>14.3 MB</td></tr>
+<tr><td>AMC (50% Time)</td><td>272M</td><td>70.2%</td><td>59.7 ms</td><td>2.0×</td><td>13.2 MB</td></tr>
+<tr><td>0.75 MobileNet</td><td>325M</td><td>68.4%</td><td>69.5 ms</td><td>1.7×</td><td>14.8 MB</td></tr>
+</table>
+<p>Compare the last two rows. AMC (50% Time) is faster than the hand-shrunk 0.75 MobileNet <i>and</i> 1.8 points more accurate, because it chose where to cut instead of shrinking everything evenly.</p>
+
+<h3>NetAdapt: a rule-based iterative method</h3>
+<p>The goal is the same: find per-layer ratios that meet a global resource constraint such as latency or energy. The difference is that NetAdapt gets there with a simple greedy loop instead of a learned agent: <a class="src" href="#r10">[Yang et al., §3]</a></p>
+<ol>
+<li>Each iteration aims to cut latency by a manually chosen amount ΔR.</li>
+<li>For each layer <i>L<sub>k</sub></i> (A to Z), prune just that layer until its latency reduction meets ΔR, using a pre-built lookup table.</li>
+<li>Short-term fine-tune each candidate (10k iterations) and measure its accuracy.</li>
+<li>Keep the candidate with the highest accuracy.</li>
+<li>Repeat until the total latency reduction satisfies the constraint, then run a long-term fine-tune to recover accuracy.</li>
+</ol>
+<p>A bonus: every iteration produces a model, so you get <b>a series of models</b> with different costs (#models = #iterations). On the latency-accuracy plot, NetAdapt is 1.7× faster with 0.3% higher accuracy than the Multipliers baseline, and 1.6× faster with 0.3% higher accuracy than MorphNet.</p>
+
+<table><tr><th>Approach</th><th>How ratios are chosen</th><th>Weakness</th></tr>
+<tr><td>Sensitivity analysis</td><td>One layer at a time, then a threshold T</td><td>Ignores interactions between layers</td></tr>
+<tr><td>AMC</td><td>An RL agent (DDPG) outputs a ratio per layer</td><td>Needs an RL training loop</td></tr>
+<tr><td>NetAdapt</td><td>Greedy: prune the layer that hurts accuracy least, repeat</td><td>Many short fine-tunes per iteration</td></tr>
+</table>
+
+<h2 id="s6">6 · Fine-tuning turns a damaged model into a good one</h2>
+<p>Back to your opening guess. On AlexNet, pruning <i>without</i> retraining loses about 0.5% accuracy at 50% pruned and over 4% at 80%. The weight histogram shows why: pruning cuts out the band of weights near zero. If you then <b>retrain the remaining weights</b>, the accuracy comes back, and you can push to roughly 90% pruned with no loss. <a class="src" href="#r2">[Han et al., Fig. 5]</a></p>
+
+<figure><div class="flow">
+  <div class="node in">Train connectivity<small>normal training</small></div>
+  <div class="node">Prune connections<small>50% → 70% → …</small></div>
+  <div class="node">Train weights<small>LR × 1/10 to 1/100</small></div>
+</div><figcaption>Loop the last two steps: iterative pruning</figcaption></figure>
+
+<ul>
+<li>The <b>learning rate</b> for fine-tuning is usually 1/100 or 1/10 of the original. The network is already close to a good solution and only needs small corrections.</li>
+<li><b>Iterative pruning</b> treats one prune plus fine-tune as an iteration and raises the target sparsity each time (50%, then 70%, …).</li>
+<li><mark>On AlexNet, iterative pruning boosts the pruning ratio from 5× to 9× compared with one aggressive pruning step.</mark></li>
+</ul>
+<p>So the answer to the opening question is closer to <b>90%</b>, provided you prune gradually and retrain in between.</p>
+
+<h2>Concept map</h2>
+<div class="kg">
+  <div><h4>Needs first</h4><a href="#s1">Weights vs activations</a><a href="#s1">Loss function, L0 norm</a><a href="#s3">Lp norms, Hessian</a><a href="#s4">ReLU</a></div>
+  <div><h4>This topic</h4><a class="me" href="#top">Pruning</a><a href="#s2">Granularity</a><a href="#s3">Criterion</a><a href="#s5">Ratio</a><a href="#s6">Fine-tuning</a></div>
+  <div><h4>Leads to</h4><a href="#s2">2:4 sparse GPUs</a><a href="#s5">AMC / AutoML</a><a href="#s5">NetAdapt</a><a href="#r1">On-device AI</a></div>
+</div>
+<table><tr><th>From</th><th>Relation</th><th>To</th></tr>
+<tr><td>Pruning</td><td>formalized-by</td><td>arg min L s.t. ‖W<sub>P</sub>‖<sub>0</sub> &lt; N</td></tr>
+<tr><td>Channel pruning</td><td>is-a</td><td>coarse-grained (structured) pruning</td></tr>
+<tr><td>Neuron pruning</td><td>is-a</td><td>coarse-grained weight pruning</td></tr>
+<tr><td>Magnitude pruning</td><td>example-of</td><td>OBD with equal curvature h<sub>ii</sub></td></tr>
+<tr><td>Uniform shrink</td><td>contrasts-with</td><td>per-layer (non-uniform) ratios</td></tr>
+<tr><td>Sensitivity analysis</td><td>requires</td><td>a threshold T</td></tr>
+<tr><td>N:M sparsity</td><td>enables</td><td>~2× speedup on Ampere GPUs</td></tr>
+<tr><td>Iterative fine-tuning</td><td>causes</td><td>5× → 9× on AlexNet</td></tr>
+</table>
+
+<h2>Exam check: try before you open</h2>
+<ol class="qz">
+<li>Write the pruning objective and name every symbol.<details><summary>Answer</summary><p>arg min<sub>W<sub>P</sub></sub> L(x; W<sub>P</sub>) s.t. ‖W<sub>P</sub>‖<sub>0</sub> &lt; N. L is the training loss, x the input, W<sub>P</sub> the pruned weights, ‖·‖<sub>0</sub> the count of nonzeros, and N the target number of nonzeros.</p></details></li>
+<li>Prune [[4, −1], [−2, 3]] by 50% with row-wise L2.<details><summary>Answer</summary><p>Row norms are √17 and √13, so prune row 1: [[4, −1], [0, 0]]. Element-wise pruning would instead keep 4 and 3.</p></details></li>
+<li>Why does fine-grained pruning get high compression but little real speedup?<details><summary>Answer</summary><p>The zeros are scattered, so dense hardware still processes the full matrix shape. Turning sparsity into speed needs index handling or special hardware. Structured pruning leaves a smaller dense matrix instead.</p></details></li>
+<li>How many index bits does each kept value need in 2:4 sparsity, and why?<details><summary>Answer</summary><p>2 bits: each kept value records its position among the 4 slots. There are C(4,2) = 6 possible patterns per group.</p></details></li>
+<li>State the three OBD assumptions and the resulting formula.<details><summary>Answer</summary><p>The loss is nearly quadratic (drop the cubic term), training has converged (drop the gradient term), and deletions are independent (drop the cross terms). The result is δL<sub>i</sub> ≈ ½ h<sub>ii</sub> w<sub>i</sub>².</p></details></li>
+<li>A channel has APoZ 14/32. Another has 11/32. Which do you prune?<details><summary>Answer</summary><p>The 14/32 channel. A higher APoZ means it outputs zeros more often, so it is less important.</p></details></li>
+<li>What does the AMC reward return when the constraint is violated, and why use DDPG?<details><summary>Answer</summary><p>It returns −∞. DDPG is used because the action, a pruning ratio in [0,1), is continuous.</p></details></li>
+<li>What is the main weakness of sensitivity analysis, and which methods address it?<details><summary>Answer</summary><p>It ignores interactions between layers. AMC and NetAdapt search over the whole network, through RL or a greedy loop with short fine-tuning.</p></details></li>
+</ol>
+
+<h2>What this does not show</h2>
+<p>This page sticks to what the slides cover. It skips how sparse weights are actually stored and executed (sparse formats, compilers), pruning of large language models, and the specific reward and state encodings in the AMC paper beyond the slide summary. The Lab 4 curves are approximations traced from a plot, not measured data. All benchmark numbers depend on their hardware, as stated: Ampere GPUs for 2:4 sparsity and a Galaxy S7 Edge for the AMC latencies.</p>
+
+<h2>References</h2>
+<ol class="refs">
+  <li id="r1"><a class="t" href="../Lecture6.pdf">CSC 4814/6814 Efficient AI, Lectures 4–6 (Dr. Haoxin Wang, GSU)</a><span class="d">The course slides this page follows: formulation, granularity, criteria, sensitivity analysis, AMC, NetAdapt and fine-tuning. Lectures 4 and 5 are in the same folder.</span></li>
+  <li id="r2"><a class="t" href="https://arxiv.org/abs/1506.02626">Han et al., Learning both Weights and Connections for Efficient Neural Networks (NeurIPS 2015)</a><span class="d">Magnitude pruning, the train → prune → retrain loop, the AlexNet curves, iterative pruning, and the compression table.</span></li>
+  <li id="r3"><a class="t" href="https://arxiv.org/abs/1705.08922">Mao et al., Exploring the Regularity of Sparse Structure in CNNs (CVPR-W 2017)</a><span class="d">The fine-grained → channel-level granularity spectrum.</span></li>
+  <li id="r4"><a class="t" href="https://arxiv.org/abs/2104.08378">Mishra et al., Accelerating Sparse Deep Neural Networks (NVIDIA, 2021)</a><span class="d">2:4 structured sparsity on Ampere, the compressed format with 2-bit indices, and the accuracy table.</span></li>
+  <li id="r5"><a class="t" href="https://arxiv.org/abs/1708.06519">Liu et al., Learning Efficient Convolutional Networks through Network Slimming (ICCV 2017)</a><span class="d">Scaling-based pruning with trainable per-channel factors.</span></li>
+  <li id="r6"><a class="t" href="https://proceedings.neurips.cc/paper_files/paper/1989/hash/6c9882bbac1c7093bd25041881277658-Abstract.html">LeCun et al., Optimal Brain Damage (NeurIPS 1989)</a><span class="d">The second-order Taylor criterion and its three assumptions.</span></li>
+  <li id="r7"><a class="t" href="https://arxiv.org/abs/1607.03250">Hu et al., Network Trimming: A Data-Driven Neuron Pruning Approach (2016)</a><span class="d">APoZ: pruning neurons by their average percentage of zero activations.</span></li>
+  <li id="r8"><a class="t" href="https://arxiv.org/abs/1707.06168">He et al., Channel Pruning for Accelerating Very Deep Neural Networks (ICCV 2017)</a><span class="d">Regression-based channel selection with β, solved by alternating between β and W.</span></li>
+  <li id="r9"><a class="t" href="https://arxiv.org/abs/1802.03494">He et al., AMC: AutoML for Model Compression and Acceleration on Mobile Devices (ECCV 2018)</a><span class="d">Non-uniform vs uniform pruning, the RL formulation, ResNet50 density and MobileNet latency results.</span></li>
+  <li id="r10"><a class="t" href="https://arxiv.org/abs/1804.03230">Yang et al., NetAdapt: Platform-Aware Neural Network Adaptation (ECCV 2018)</a><span class="d">The iterative ΔR loop, the lookup-table latency, short- and long-term fine-tuning, and the model series.</span></li>
+</ol>
+
+<footer>Built with the Philosopher-OKF skill · technology-engineering · deep · undergrad · Companion page: <a href="neural-network-building-blocks.html">NN Building Blocks (Lectures 2–3)</a></footer>
+</div></div>
+
+<script>
+(function(){
+function tabs(lab,fn){var b=lab.querySelectorAll('[data-g] button');b.forEach(function(x){x.onclick=function(){b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x.dataset.m)}})}
+function cell(v,c){var s=document.createElement('span');s.textContent=v;if(c)s.className=c;return s}
+
+/* Lab 1: granularity */
+var G=[[.9,-.1,.4,-.7,.2,.05,-.8,.3],[-.2,.1,.05,.3,-.1,.2,.15,-.05],[.6,-.9,.1,.2,.7,-.3,.1,.8],[.1,.5,-.6,.05,-.4,.9,.2,-.1]];
+var tot=0;G.forEach(function(r){r.forEach(function(v){tot+=Math.abs(v)})});
+var note={dense:'All 32 weights kept. Nothing saved yet.',fine:'Kept the 16 largest |w| anywhere. Most magnitude kept, but the zeros are scattered, so dense hardware sees no speedup.',nm:'In every group of 4, kept the top 2. Each kept value needs a 2-bit index, and Ampere GPUs run it at up to about 2× speed.',row:'Removed the 2 rows with the smallest L2 norm. What is left is a 2×8 dense matrix, so the speedup is free, but the most magnitude is lost.'};
+function g(m){var keep=G.map(function(r){return r.map(function(){return m==='dense'})});
+ if(m==='fine'){var a=[];G.forEach(function(r,i){r.forEach(function(v,j){a.push([Math.abs(v),i,j])})});a.sort(function(x,y){return y[0]-x[0]});a.slice(0,16).forEach(function(t){keep[t[1]][t[2]]=true})}
+ if(m==='nm'){G.forEach(function(r,i){for(var k=0;k<8;k+=4){var idx=[k,k+1,k+2,k+3].sort(function(x,y){return Math.abs(r[y])-Math.abs(r[x])});keep[i][idx[0]]=keep[i][idx[1]]=true}})}
+ if(m==='row'){var n=G.map(function(r,i){return[Math.sqrt(r.reduce(function(s,v){return s+v*v},0)),i]}).sort(function(x,y){return y[0]-x[0]});[n[0][1],n[1][1]].forEach(function(i){keep[i]=keep[i].map(function(){return true})})}
+ var box=document.getElementById('g-mx');box.innerHTML='';var kept=0,mag=0;
+ G.forEach(function(r,i){r.forEach(function(v,j){box.appendChild(cell(v,keep[i][j]?'':'p'));if(keep[i][j]){kept++;mag+=Math.abs(v)}})});
+ document.getElementById('g-stat').innerHTML='kept <b>'+kept+'/32</b> weights · magnitude kept <b>'+Math.round(100*mag/tot)+'%</b><br>'+note[m]}
+tabs(document.getElementById('lab1'),g);g('dense');
+
+/* Lab 2: magnitude */
+var lab2=document.getElementById('lab2'),ins=lab2.querySelectorAll('input'),mode='el';
+function fmt(x){return Math.abs(x-Math.round(x))<1e-9?String(Math.round(x)):x.toFixed(2)}
+function m2(){var w=[].map.call(ins,function(i){return parseFloat(i.value)||0});var imp=document.getElementById('m-imp'),out=document.getElementById('m-out');imp.innerHTML=out.innerHTML='';var keep,txt;
+ if(mode==='el'){var s=w.map(function(v,i){return[Math.abs(v),i]}).sort(function(a,b){return b[0]-a[0]});keep=[0,0,0,0];keep[s[0][1]]=keep[s[1][1]]=1;w.forEach(function(v,i){imp.appendChild(cell(fmt(Math.abs(v)),keep[i]?'':'nz'))});txt='keep the 2 largest |w|'}
+ else{var r=[[w[0],w[1]],[w[2],w[3]]].map(function(p){return mode==='l1'?Math.abs(p[0])+Math.abs(p[1]):Math.sqrt(p[0]*p[0]+p[1]*p[1])});var k=r[0]>=r[1]?0:1;keep=k===0?[1,1,0,0]:[0,0,1,1];
+  r.forEach(function(v,i){var lab=mode==='l2'?'√'+fmt(v*v):fmt(v);imp.appendChild(cell(lab,keep[2*i]?'':'nz'));imp.appendChild(cell('',keep[2*i]?'':'nz'))});txt='row importances '+r.map(function(v){return mode==='l2'?'√'+fmt(v*v):fmt(v)}).join(' and ')+', so row '+(1-k)+' is pruned'}
+ w.forEach(function(v,i){out.appendChild(cell(keep[i]?fmt(v):'0',keep[i]?'':'p'))});document.getElementById('m-stat').innerHTML=txt}
+ins.forEach(function(i){i.oninput=m2});tabs(lab2,function(m){mode=m;m2()});m2();
+
+/* Lab 3: APoZ, exact slide data [input][channel][row] */
+var A=[[[[0,.1,.5,1],[1.2,.6,.3,.2],[0,.5,0,.3],[.2,0,0,.8]],[[.1,.5,0,0],[.2,.3,0,1],[.1,0,0,.5],[.1,.6,.7,.1]],[[0,0,.8,0],[.7,0,.6,.1],[1.2,1,0,.2],[.5,0,.3,.5]]],
+       [[[.5,0,.2,.1],[0,.2,1.2,0],[1.2,0,.2,.3],[.2,.4,0,0]],[[.1,.5,0,0],[0,.8,0,1],[.1,0,.1,1],[.2,0,1,0]],[[0,.8,.1,0],[.2,0,0,.3],[0,.4,0,.5],[.2,0,.3,0]]]];
+var shown=false;
+function a3(){var g=document.getElementById('a-grid');g.innerHTML='';
+ A.forEach(function(inp,n){var row=document.createElement('div');row.className='row2';row.style.marginBottom='.8rem';
+  inp.forEach(function(ch,c){var d=document.createElement('div');d.innerHTML='<div class="cap">Input '+(n+1)+' · Ch '+c+'</div>';var m=document.createElement('div');m.className='mx sm';m.style.gridTemplateColumns='repeat(4,auto)';
+   ch.forEach(function(r){r.forEach(function(v){m.appendChild(cell(v,shown?(v===0?'z':'nz'):'nz'))})});d.appendChild(m);row.appendChild(d)});g.appendChild(row)});
+ if(shown){var z=[0,1,2].map(function(c){var k=0;A.forEach(function(inp){inp[c].forEach(function(r){r.forEach(function(v){if(v===0)k++})})});return k});
+  document.getElementById('a-stat').innerHTML=z.map(function(k,c){return 'Ch '+c+': APoZ = '+k+'/(2·4·4) = <b>'+k+'/32</b>'}).join(' · ')+'<br>Highest APoZ is Ch 2 ('+z[2]+'/32): it is zero most often, so <b>prune Channel 2</b>.'}}
+document.getElementById('a-btn').onclick=function(){shown=!shown;this.textContent=shown?'Hide zeros':'Highlight zeros + compute APoZ';if(!shown)document.getElementById('a-stat').innerHTML='';a3()};a3();
+
+/* Lab 4: sensitivity (approximate curves at r = .1..0.9) */
+var S={L0:[90,90,90,89.5,89,87,84,72,32],L1:[90,90,90,90,90,90,90,89,84],L2:[90,90,90,90,90,89.5,89,87,79],L3:[90,90,90,90,90,89.5,88.5,85,52],L4:[90,90,90,90,89.5,89,87.5,81,38],L5:[90,90,90,90,90,90,89.5,89,82]};
+var T=document.getElementById('s-T');
+function s4(){var t=+T.value,html='',sum=0,n=0;document.getElementById('s-Tv').textContent=t;
+ for(var k in S){var r=0;S[k].forEach(function(a,i){if(a>=t&&r===i/10)r=(i+1)/10});sum+=r;n++;
+  html+='<div class="bar"><span>'+k+(k==='L0'?' (fragile)':k==='L1'?' (robust)':'')+'</span><i style="--v:'+(r*100)+'%"></i><b>'+Math.round(r*100)+'%</b></div>'}
+ document.getElementById('s-bars').innerHTML=html;
+ document.getElementById('s-sum').innerHTML='Average pruning rate (if all layers were the same size): <b>'+Math.round(100*sum/n)+'%</b>. Lower T gives more pruning and less accuracy.'}
+T.oninput=s4;s4();
+})();
+</script>
+</body></html>
