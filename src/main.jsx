@@ -715,7 +715,7 @@ function Reader({ note, route, saved, onSave, onShare }) {
           >
             <Icon type={Bookmark} fill={saved ? "currentColor" : "none"} />
           </button>
-          <button className="share-button" onClick={onShare}>
+          <button className="share-button" aria-label="Share note" onClick={onShare}>
             <Icon type={Link} />
             <span>Share note</span>
           </button>
