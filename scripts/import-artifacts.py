@@ -13,6 +13,8 @@ ORDER = [
  ('neural-network-pruning.html', 'The art of cutting a model', 'The practical part', 'Interactive', 'Lectures 04–06', 'Explore what to cut, what to keep, and how a smaller network finds its footing again.'),
  ('pruning-loss-and-reconstruction.html', 'Which deletion hurts least?', 'The mathematics', 'Worked examples', 'Lecture 06 review', 'Work through loss, curvature, channel selection, and least-squares reconstruction.'),
  ('pruning-budgets-and-efficiency.html', 'Count what pruning really saves', 'The resource budget', 'Worked examples', 'Lecture 06 review', 'Calculate sparsity, memory, computation, layer budgets, and fine-tuning schedules.'),
+ ('lecture7-worked-guide.html', 'Number formats and quantization', 'The bit budget', 'Worked examples', 'Lecture 07', 'Decode integer, fixed-point, and floating-point formats, then work through quantization with 17 new practice questions.'),
+ ('midterm-review-worked-guide.html', 'Midterm review, worked through', 'Prepare with understanding', 'Worked examples', 'Lectures 01–07', 'Study all five example questions, the 42 starred-slide priorities, and 54 practice panels with step-by-step solutions.'),
 ]
 class Text(HTMLParser):
  def __init__(self): super().__init__(); self.parts=[]; self.skip=0
@@ -38,7 +40,17 @@ for index,(file,title,kicker,kind,lecture,description) in enumerate(ORDER):
  items.append({'id':file.removesuffix('.html'),'file':file,'title':title,'originalTitle':plain(re.search(r'<h1[^>]*>(.*?)</h1>',html,re.S)[1]),'kicker':kicker,'kind':kind,'lecture':lecture,'description':description,'minutes':math.ceil(len(full.split())/200),'order':index+1,'sections':sections,'searchText':full})
  if src != destination/file:
   shutil.copy2(src,destination/file)
+  if file == 'lecture7-worked-guide.html':
+   # The standalone source uses an older companion filename.
+   published = html.replace('href="midterm-worked-guide.html"', 'href="midterm-review-worked-guide.html"')
+   (destination/file).write_text(published)
 for n in [2,3,4,5,6]:shutil.copy2(ROOT.parent/f'Lecture{n}.pdf',ROOT/'public'/f'Lecture{n}.pdf')
+shutil.copy2(ROOT.parent/'Mid-term Review.pdf', ROOT/'public'/'Mid-term Review.pdf')
+# Preserve the worked review's links to its coverage and arithmetic evidence.
+evidence = ROOT/'public/quiz-work'
+evidence.mkdir(parents=True, exist_ok=True)
+for file in ['midterm-review-audit.md', 'midterm-numeric-verification.json', 'verify-midterm-numerics.py']:
+ shutil.copy2(ROOT.parent/'quiz-work'/file, evidence/file)
 (ROOT/'src/data').mkdir(parents=True,exist_ok=True)
 (ROOT/'src/data/artifacts.json').write_text(json.dumps(items,indent=2,ensure_ascii=False)+'\n')
-print(f'Imported {len(items)} study pages and 5 source slide decks.')
+print(f'Imported {len(items)} study pages and 6 source slide decks.')

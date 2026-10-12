@@ -1,0 +1,994 @@
+{
+  "checks": [
+    {
+      "id": "source_dense_weights",
+      "result": 12,
+      "expected": 12,
+      "pass": true
+    },
+    {
+      "id": "source_dense_total",
+      "result": 18,
+      "expected": 18,
+      "pass": true
+    },
+    {
+      "id": "dense_A",
+      "result": [
+        35,
+        42,
+        21,
+        105
+      ],
+      "expected": [
+        35,
+        42,
+        21,
+        105
+      ],
+      "pass": true
+    },
+    {
+      "id": "dense_B",
+      "result": [
+        36,
+        40,
+        8,
+        72
+      ],
+      "expected": [
+        36,
+        40,
+        8,
+        72
+      ],
+      "pass": true
+    },
+    {
+      "id": "conv_A",
+      "result": {
+        "out": [
+          8,
+          8,
+          8
+        ],
+        "weights": 288,
+        "activations": 512,
+        "macs": 18432
+      },
+      "expected": {
+        "out": [
+          8,
+          8,
+          8
+        ],
+        "weights": 288,
+        "activations": 512,
+        "macs": 18432
+      },
+      "pass": true
+    },
+    {
+      "id": "conv_B",
+      "result": {
+        "out": [
+          6,
+          11,
+          11
+        ],
+        "weights": 450,
+        "activations": 726,
+        "macs": 54450
+      },
+      "expected": {
+        "out": [
+          6,
+          11,
+          11
+        ],
+        "weights": 450,
+        "activations": 726,
+        "macs": 54450
+      },
+      "pass": true
+    },
+    {
+      "id": "group_A",
+      "result": {
+        "out": [
+          12,
+          10,
+          10
+        ],
+        "weights": 216,
+        "activations": 1200,
+        "macs": 21600
+      },
+      "expected": {
+        "out": [
+          12,
+          10,
+          10
+        ],
+        "weights": 216,
+        "activations": 1200,
+        "macs": 21600
+      },
+      "pass": true
+    },
+    {
+      "id": "group_B",
+      "result": {
+        "out": [
+          16,
+          8,
+          8
+        ],
+        "weights": 432,
+        "activations": 1024,
+        "macs": 27648
+      },
+      "expected": {
+        "out": [
+          16,
+          8,
+          8
+        ],
+        "weights": 432,
+        "activations": 1024,
+        "macs": 27648
+      },
+      "pass": true
+    },
+    {
+      "id": "depthwise_A",
+      "result": [
+        72,
+        7200
+      ],
+      "expected": [
+        72,
+        7200
+      ],
+      "pass": true
+    },
+    {
+      "id": "depthwise_B",
+      "result": [
+        108,
+        6912
+      ],
+      "expected": [
+        108,
+        6912
+      ],
+      "pass": true
+    },
+    {
+      "id": "memory_scale_A",
+      "result": [
+        8192,
+        32768,
+        4.0
+      ],
+      "expected": [
+        8192,
+        32768,
+        4.0
+      ],
+      "pass": true
+    },
+    {
+      "id": "memory_scale_B",
+      "result": [
+        6912,
+        15552,
+        2.25
+      ],
+      "expected": [
+        6912,
+        15552,
+        2.25
+      ],
+      "pass": true
+    },
+    {
+      "id": "peak_A",
+      "result": [
+        2816,
+        11264
+      ],
+      "expected": [
+        2816,
+        11264
+      ],
+      "pass": true
+    },
+    {
+      "id": "peak_B",
+      "result": [
+        3072,
+        6144
+      ],
+      "expected": [
+        3072,
+        6144
+      ],
+      "pass": true
+    },
+    {
+      "id": "storage_source",
+      "result": [
+        244000000,
+        61000000
+      ],
+      "expected": [
+        244000000,
+        61000000
+      ],
+      "pass": true
+    },
+    {
+      "id": "storage_A",
+      "result": [
+        4800000,
+        1200000.0
+      ],
+      "expected": [
+        4800000,
+        1200000.0
+      ],
+      "pass": true
+    },
+    {
+      "id": "storage_B",
+      "result": [
+        3000000,
+        750000
+      ],
+      "expected": [
+        3000000,
+        750000
+      ],
+      "pass": true
+    },
+    {
+      "id": "seven_layer_source_diagram_weights",
+      "result": [
+        432,
+        0,
+        4608,
+        0,
+        18432,
+        0,
+        26214400
+      ],
+      "expected": [
+        432,
+        0,
+        4608,
+        0,
+        18432,
+        0,
+        26214400
+      ],
+      "pass": true
+    },
+    {
+      "id": "seven_layer_source_diagram_activations",
+      "result": [
+        4194304,
+        1048576,
+        2097152,
+        524288,
+        1048576,
+        262144,
+        100
+      ],
+      "expected": [
+        4194304,
+        1048576,
+        2097152,
+        524288,
+        1048576,
+        262144,
+        100
+      ],
+      "pass": true
+    },
+    {
+      "id": "seven_layer_source_diagram_MACs",
+      "result": [
+        113246208,
+        0,
+        301989888,
+        0,
+        301989888,
+        0,
+        26214400
+      ],
+      "expected": [
+        113246208,
+        0,
+        301989888,
+        0,
+        301989888,
+        0,
+        26214400
+      ],
+      "pass": true
+    },
+    {
+      "id": "seven_layer_source_diagram_totals",
+      "result": [
+        26237872,
+        9175140,
+        743440384
+      ],
+      "expected": [
+        26237872,
+        9175140,
+        743440384
+      ],
+      "pass": true
+    },
+    {
+      "id": "original_Q5_three_layer_totals",
+      "result": [
+        5040,
+        7340032,
+        415236096
+      ],
+      "expected": [
+        5040,
+        7340032,
+        415236096
+      ],
+      "pass": true
+    },
+    {
+      "id": "cnn_A_totals",
+      "result": [
+        11608,
+        15370,
+        526336
+      ],
+      "expected": [
+        11608,
+        15370,
+        526336
+      ],
+      "pass": true
+    },
+    {
+      "id": "cnn_B_totals",
+      "result": [
+        2970,
+        6485,
+        188784
+      ],
+      "expected": [
+        2970,
+        6485,
+        188784
+      ],
+      "pass": true
+    },
+    {
+      "id": "GEMM_source",
+      "result": 24,
+      "expected": 24,
+      "pass": true
+    },
+    {
+      "id": "GEMM_A",
+      "result": 40,
+      "expected": 40,
+      "pass": true
+    },
+    {
+      "id": "GEMM_B",
+      "result": 36,
+      "expected": 36,
+      "pass": true
+    },
+    {
+      "id": "metrics_A",
+      "result": [
+        250.0,
+        0.004,
+        0.96
+      ],
+      "expected": [
+        250.0,
+        0.004,
+        0.96
+      ],
+      "pass": true
+    },
+    {
+      "id": "metrics_B",
+      "result": [
+        200.0,
+        1.5,
+        0.075
+      ],
+      "expected": [
+        200.0,
+        1.5,
+        0.075
+      ],
+      "pass": true
+    },
+    {
+      "id": "source_magnitude",
+      "result": 0.02,
+      "expected": 0.02,
+      "pass": true
+    },
+    {
+      "id": "magnitude_A",
+      "result": [
+        0.01,
+        -0.04
+      ],
+      "expected": [
+        0.01,
+        -0.04
+      ],
+      "pass": true
+    },
+    {
+      "id": "magnitude_B",
+      "result": [
+        -0.01,
+        0.03
+      ],
+      "expected": [
+        -0.01,
+        0.03
+      ],
+      "pass": true
+    },
+    {
+      "id": "scales_A",
+      "result": -0.05,
+      "expected": -0.05,
+      "pass": true
+    },
+    {
+      "id": "scales_B",
+      "result": 0.02,
+      "expected": 0.02,
+      "pass": true
+    },
+    {
+      "id": "APoZ_A",
+      "result": [
+        0.75,
+        0.25
+      ],
+      "expected": [
+        0.75,
+        0.25
+      ],
+      "pass": true
+    },
+    {
+      "id": "APoZ_B",
+      "result": [
+        0.75,
+        0.25
+      ],
+      "expected": [
+        0.75,
+        0.25
+      ],
+      "pass": true
+    },
+    {
+      "id": "channel_A",
+      "result": [
+        864,
+        576,
+        2160,
+        1440
+      ],
+      "expected": [
+        864,
+        576,
+        2160,
+        1440
+      ],
+      "pass": true
+    },
+    {
+      "id": "channel_B",
+      "result": [
+        1728,
+        1296,
+        3456,
+        2592
+      ],
+      "expected": [
+        1728,
+        1296,
+        3456,
+        2592
+      ],
+      "pass": true
+    },
+    {
+      "id": "NM_A",
+      "result": [
+        0.5,
+        8.0
+      ],
+      "expected": [
+        0.5,
+        8.0
+      ],
+      "pass": true
+    },
+    {
+      "id": "NM_B",
+      "result": [
+        0.625,
+        9.0
+      ],
+      "expected": [
+        0.625,
+        9.0
+      ],
+      "pass": true
+    },
+    {
+      "id": "sensitivity_A",
+      "result": 0.5,
+      "expected": 0.5,
+      "pass": true
+    },
+    {
+      "id": "sensitivity_B",
+      "result": 0.3,
+      "expected": 0.3,
+      "pass": true
+    },
+    {
+      "id": "iteration_A",
+      "result": [
+        512.0000000000001,
+        0.4879999999999999
+      ],
+      "expected": [
+        512.0000000000001,
+        0.4879999999999999
+      ],
+      "pass": true
+    },
+    {
+      "id": "iteration_B",
+      "result": [
+        450.0,
+        0.4375
+      ],
+      "expected": [
+        450.0,
+        0.4375
+      ],
+      "pass": true
+    },
+    {
+      "id": "integer_source",
+      "result": [
+        192,
+        -64,
+        -64
+      ],
+      "expected": [
+        192,
+        -64,
+        -64
+      ],
+      "pass": true
+    },
+    {
+      "id": "integer_A",
+      "result": [
+        165,
+        -37,
+        -91
+      ],
+      "expected": [
+        165,
+        -37,
+        -91
+      ],
+      "pass": true
+    },
+    {
+      "id": "integer_B",
+      "result": [
+        240,
+        -112,
+        -16
+      ],
+      "expected": [
+        240,
+        -112,
+        -16
+      ],
+      "pass": true
+    },
+    {
+      "id": "fixed_source",
+      "result": 3.0625,
+      "expected": 3.0625,
+      "pass": true
+    },
+    {
+      "id": "fixed_A",
+      "result": -1.5,
+      "expected": -1.5,
+      "pass": true
+    },
+    {
+      "id": "fixed_B",
+      "result": 6.75,
+      "expected": 6.75,
+      "pass": true
+    },
+    {
+      "id": "fixed_range",
+      "result": [
+        -8.0,
+        7.9375,
+        0.0625
+      ],
+      "expected": [
+        -8.0,
+        7.9375,
+        0.0625
+      ],
+      "pass": true
+    },
+    {
+      "id": "FP32_source",
+      "result": 0.265625,
+      "expected": 0.265625,
+      "pass": true
+    },
+    {
+      "id": "FP16_source",
+      "result": -7.0,
+      "expected": -7.0,
+      "pass": true
+    },
+    {
+      "id": "FP16_A",
+      "result": 2.5,
+      "expected": 2.5,
+      "pass": true
+    },
+    {
+      "id": "FP16_B",
+      "result": -0.75,
+      "expected": -0.75,
+      "pass": true
+    },
+    {
+      "id": "FP32_A",
+      "result": 5.0,
+      "expected": 5.0,
+      "pass": true
+    },
+    {
+      "id": "FP32_B",
+      "result": -0.75,
+      "expected": -0.75,
+      "pass": true
+    },
+    {
+      "id": "subnormal_A",
+      "result": 1.7881393432617188e-07,
+      "expected": 1.7881393432617188e-07,
+      "pass": true
+    },
+    {
+      "id": "subnormal_B",
+      "result": -2.980232238769531e-07,
+      "expected": -2.980232238769531e-07,
+      "pass": true
+    },
+    {
+      "id": "FP16_boundaries",
+      "result": [
+        5.960464477539063e-08,
+        6.097555160522461e-05,
+        6.103515625e-05,
+        65504.0
+      ],
+      "expected": [
+        5.960464477539063e-08,
+        6.097555160522461e-05,
+        6.103515625e-05,
+        65504.0
+      ],
+      "pass": true
+    },
+    {
+      "id": "FP32_boundaries",
+      "result": [
+        1.401298464324817e-45,
+        1.1754942106924411e-38,
+        1.1754943508222875e-38,
+        3.4028234663852886e+38
+      ],
+      "expected": [
+        1.401298464324817e-45,
+        1.1754942106924411e-38,
+        1.1754943508222875e-38,
+        3.4028234663852886e+38
+      ],
+      "pass": true
+    },
+    {
+      "id": "FP_special_A",
+      "result": "inf",
+      "expected": "inf",
+      "pass": true
+    },
+    {
+      "id": "FP_special_B",
+      "result": "NaN",
+      "expected": "NaN",
+      "pass": true
+    },
+    {
+      "id": "spacing",
+      "result": [
+        0.0009765625,
+        0.0078125,
+        0.001953125
+      ],
+      "expected": [
+        0.0009765625,
+        0.0078125,
+        0.001953125
+      ],
+      "pass": true
+    },
+    {
+      "id": "FP4_source_correction",
+      "result": 6.0,
+      "expected": 6.0,
+      "pass": true
+    },
+    {
+      "id": "FP4_A",
+      "result": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "id": "FP4_B",
+      "result": 0.5,
+      "expected": 0.5,
+      "pass": true
+    },
+    {
+      "id": "quant_A",
+      "result": [
+        2,
+        0.5,
+        0.12
+      ],
+      "expected": [
+        2,
+        0.5,
+        0.12
+      ],
+      "pass": true
+    },
+    {
+      "id": "quant_B",
+      "result": [
+        -4,
+        -0.8,
+        0.07999999999999996
+      ],
+      "expected": [
+        -4,
+        -0.8,
+        0.07999999999999996
+      ],
+      "pass": true
+    },
+    {
+      "id": "quant_clipped",
+      "result": [
+        7,
+        1.75
+      ],
+      "expected": [
+        7,
+        1.75
+      ],
+      "pass": true
+    }
+  ],
+  "seven_layer_source_diagram": [
+    {
+      "out": [
+        16,
+        512,
+        512
+      ],
+      "weights": 432,
+      "activations": 4194304,
+      "macs": 113246208
+    },
+    {
+      "out": [
+        16,
+        256,
+        256
+      ],
+      "weights": 0,
+      "activations": 1048576,
+      "macs": 0
+    },
+    {
+      "out": [
+        32,
+        256,
+        256
+      ],
+      "weights": 4608,
+      "activations": 2097152,
+      "macs": 301989888
+    },
+    {
+      "out": [
+        32,
+        128,
+        128
+      ],
+      "weights": 0,
+      "activations": 524288,
+      "macs": 0
+    },
+    {
+      "out": [
+        64,
+        128,
+        128
+      ],
+      "weights": 18432,
+      "activations": 1048576,
+      "macs": 301989888
+    },
+    {
+      "out": [
+        64,
+        64,
+        64
+      ],
+      "weights": 0,
+      "activations": 262144,
+      "macs": 0
+    },
+    {
+      "out": [
+        100
+      ],
+      "weights": 26214400,
+      "activations": 100,
+      "macs": 26214400
+    }
+  ],
+  "constructed_CNN": {
+    "cnn_A": [
+      {
+        "out": [
+          8,
+          32,
+          32
+        ],
+        "weights": 216,
+        "activations": 8192,
+        "macs": 221184
+      },
+      {
+        "out": [
+          8,
+          16,
+          16
+        ],
+        "weights": 0,
+        "activations": 2048,
+        "macs": 0
+      },
+      {
+        "out": [
+          16,
+          16,
+          16
+        ],
+        "weights": 1152,
+        "activations": 4096,
+        "macs": 294912
+      },
+      {
+        "out": [
+          16,
+          8,
+          8
+        ],
+        "weights": 0,
+        "activations": 1024,
+        "macs": 0
+      },
+      {
+        "out": [
+          10
+        ],
+        "weights": 10240,
+        "activations": 10,
+        "macs": 10240
+      }
+    ],
+    "cnn_B": [
+      {
+        "out": [
+          6,
+          24,
+          24
+        ],
+        "weights": 162,
+        "activations": 3456,
+        "macs": 93312
+      },
+      {
+        "out": [
+          6,
+          12,
+          12
+        ],
+        "weights": 0,
+        "activations": 864,
+        "macs": 0
+      },
+      {
+        "out": [
+          12,
+          12,
+          12
+        ],
+        "weights": 648,
+        "activations": 1728,
+        "macs": 93312
+      },
+      {
+        "out": [
+          12,
+          6,
+          6
+        ],
+        "weights": 0,
+        "activations": 432,
+        "macs": 0
+      },
+      {
+        "out": [
+          5
+        ],
+        "weights": 2160,
+        "activations": 5,
+        "macs": 2160
+      }
+    ]
+  },
+  "count": 70,
+  "all_passed": true
+}

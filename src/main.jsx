@@ -217,6 +217,30 @@ function ArtifactArt({ id }) {
             </g>
           ))}
         </>
+      ) : id === "lecture7-worked-guide" ? (
+        <g>
+          {Array.from({ length: 8 }, (_, i) => (
+            <g key={i}>
+              <rect x={19 + i * 14} y="22" width="12" height="24" rx="2"
+                fill={i === 0 ? "#fde7c4" : i < 4 ? "#eeebfb" : "#fffefb"}
+                stroke={i === 0 ? "#c9ae89" : "#bcb4e7"} />
+              <text x={25 + i * 14} y="38" textAnchor="middle">{i % 3 === 0 ? "1" : "0"}</text>
+            </g>
+          ))}
+          <path d="M20 56H32M34 56H74M76 56H130" stroke="#bcb4e7" />
+          <text x="75" y="76" textAnchor="middle">range · precision</text>
+        </g>
+      ) : id === "midterm-review-worked-guide" ? (
+        <g strokeLinecap="round" strokeLinejoin="round">
+          <rect x="35" y="9" width="80" height="72" rx="3" fill="#fffefb" stroke="#bcb4e7" />
+          {[0, 1, 2].map((i) => (
+            <g key={i}>
+              <path d={`M47 ${28 + i * 18}l3 3 6-7`} fill="none" stroke="#5b4fc7" strokeWidth="1.5" />
+              <path d={`M64 ${27 + i * 18}h35M64 ${32 + i * 18}h24`} stroke="#ded9ce" />
+            </g>
+          ))}
+          <path d="M112 15l2 5 6 .5-4.5 4 1.5 6-5-3-5 3 1.5-6-4.5-4 6-.5Z" fill="#fde7c4" stroke="#c9ae89" />
+        </g>
       ) : id === "pruning-loss-and-reconstruction" ? (
         <g strokeLinecap="round" strokeLinejoin="round">
           <path d="M22 12V72H134" fill="none" stroke="#ded9ce" />
@@ -577,7 +601,7 @@ function App() {
                 <span>
                   {String(artifacts.length).padStart(2, "0")} artifacts
                 </span>
-                <span>Lectures 02–06</span>
+                <span>Lectures 02–07 · Midterm review</span>
                 <span>Made for the curious</span>
               </div>
             </div>
