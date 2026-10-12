@@ -15,6 +15,7 @@ ORDER = [
  ('pruning-budgets-and-efficiency.html', 'Count what pruning really saves', 'The resource budget', 'Worked examples', 'Lecture 06 review', 'Calculate sparsity, memory, computation, layer budgets, and fine-tuning schedules.'),
  ('lecture7-worked-guide.html', 'Number formats and quantization', 'The bit budget', 'Worked examples', 'Lecture 07', 'Decode integer, fixed-point, and floating-point formats, then work through quantization with 17 new practice questions.'),
  ('midterm-review-worked-guide.html', 'Midterm review, worked through', 'Prepare with understanding', 'Worked examples', 'Lectures 01–07', 'Study all five example questions, the 42 starred-slide priorities, and 54 practice panels with step-by-step solutions.'),
+ ('convolution-and-exam-math-lab.html', 'Convolution and exam math, from first principles', 'Learn by doing', 'Interactive', 'Midterm · Lectures 01–07', 'Start with a sliding kernel, understand each formula, and practise all starred review topics through eight hands-on labs.'),
 ]
 class Text(HTMLParser):
  def __init__(self): super().__init__(); self.parts=[]; self.skip=0

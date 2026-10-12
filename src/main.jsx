@@ -217,6 +217,20 @@ function ArtifactArt({ id }) {
             </g>
           ))}
         </>
+      ) : id === "convolution-and-exam-math-lab" ? (
+        <g strokeLinecap="round" strokeLinejoin="round">
+          {Array.from({ length: 16 }, (_, i) => (
+            <rect key={i} x={18 + (i % 4) * 13} y={17 + Math.floor(i / 4) * 13}
+              width="11" height="11" rx="1"
+              fill={i % 4 < 2 && i < 8 ? "#fde7c4" : "#eeebfb"}
+              stroke={i % 4 < 2 && i < 8 ? "#c9ae89" : "#bcb4e7"} />
+          ))}
+          <path d="M76 43H94M88 37L94 43L88 49" fill="none" stroke="#5b4fc7" />
+          <rect x="102" y="29" width="25" height="25" rx="2" fill="#fffefb" stroke="#bcb4e7" />
+          <text x="114" y="46" textAnchor="middle">Σ</text>
+          <text x="44" y="80" textAnchor="middle">patch</text>
+          <text x="114" y="80" textAnchor="middle">response</text>
+        </g>
       ) : id === "lecture7-worked-guide" ? (
         <g>
           {Array.from({ length: 8 }, (_, i) => (
